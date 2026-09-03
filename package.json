@@ -1,0 +1,19 @@
+{
+  "name": "lunchfeed",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Publish the Rye elementary lunch menu as JSON and iCalendar.",
+  "scripts": {
+    "build": "node --env-file-if-exists=.env scripts/build-menu.mjs",
+    "discover": "node --env-file-if-exists=.env scripts/build-menu.mjs --discover-only",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2",
+    "tesseract.js": "^7.0.0"
+  }
+}

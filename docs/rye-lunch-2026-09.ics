@@ -1,0 +1,144 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Lunchfeed//Rye Elementary Lunch//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Rye Elementary Lunch
+BEGIN:VEVENT
+UID:2026-09-08@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260908
+DTEND;VALUE=DATE:20260909
+SUMMARY:Lunch: Chicken Tenders & Baked Waffle Fries
+DESCRIPTION:Sides: Steamed Corn\, Fresh Apple
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-09@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260909
+DTEND;VALUE=DATE:20260910
+SUMMARY:Lunch: Shell Pasta Macaroni & Cheese (Buttered Pasta Available)
+DESCRIPTION:Sides: Cucumber Tomato Salad\, Cantaloupe Slice
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-10@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260910
+DTEND;VALUE=DATE:20260911
+SUMMARY:Lunch: French Toast Sticks
+DESCRIPTION:Sides: Hard Boiled Egg\, Hash Brown\, Banana\, Green Bell Pep
+ pers
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-11@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260911
+DTEND;VALUE=DATE:20260912
+SUMMARY:Lunch: Cheese or Pepperoni Pizza
+DESCRIPTION:Sides: Garden Salad\, Sliced Packaged Apples
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-14@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260914
+DTEND;VALUE=DATE:20260915
+SUMMARY:Lunch: Grilled Chicken
+DESCRIPTION:Sides: Quinoa Salad\, Roasted Zucchini/Yellow Squash\, Honeyd
+ ew
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-15@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260915
+DTEND;VALUE=DATE:20260916
+SUMMARY:Lunch: Rotini Pasta Marinara/Meat Sauce (Buttered Pasta Available
+ )
+DESCRIPTION:Sides: Garlic Bread\, Sauteed Spinach\, Kiwi
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-16@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260916
+DTEND;VALUE=DATE:20260917
+SUMMARY:Lunch: Cheese Quesadilla
+DESCRIPTION:Sides: Black Beans\, Brown Rice with Pico\, Sour Cream/Guacam
+ ole\, Watermelon Slice
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-17@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260917
+DTEND;VALUE=DATE:20260918
+SUMMARY:Lunch: Greek Yogurt or Acai Bowl with Strawberry/Banana/Blueberri
+ es/Nut Free Granola/Chia Seed/Agave
+DESCRIPTION:Alternate: Mini Bagel Butter/Cream Cheese
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-18@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260918
+DTEND;VALUE=DATE:20260919
+SUMMARY:Lunch: Cheese or Pepperoni Pizza
+DESCRIPTION:Sides: Caesar Salad\, Sliced Packaged Apples
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-22@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260922
+DTEND;VALUE=DATE:20260923
+SUMMARY:Lunch: Ramen Noodle Bar Yakisoba Noodles (GF Rice Noodle Availabl
+ e) with Grilled Chicken/Tofu
+DESCRIPTION:Sides: Shelled Edamame\, Broccoli\, Orange Slices\, Fortune C
+ ookie
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-23@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260923
+DTEND;VALUE=DATE:20260924
+SUMMARY:Lunch: Penne Chicken Rose with Pink Sauce or Butter
+DESCRIPTION:Sides: Fresh Basil\, Garlic Bread\, Roasted Broccoli\, Orange
+  Slices\, Fortune Cookie
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-24@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260924
+DTEND;VALUE=DATE:20260925
+SUMMARY:Lunch: Taco Bowl with Seasoned Taco Meat over White Rice
+DESCRIPTION:Sides: Shredded Cheddar\, Lettuce\, Pico\, Cilantro\, Sour Cr
+ eam/Guacamole\, Watermelon Slice
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-25@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260925
+DTEND;VALUE=DATE:20260926
+SUMMARY:Lunch: Cheese or Pepperoni Pizza
+DESCRIPTION:Sides: Greek Salad with Feta\, Sliced Packaged Apples
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-28@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260928
+DTEND;VALUE=DATE:20260929
+SUMMARY:Lunch: Boneless Chicken with BBQ or Honey Mustard
+DESCRIPTION:Sides: Roasted Kale\, Veggie Pasta Salad
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-29@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260929
+DTEND;VALUE=DATE:20260930
+SUMMARY:Lunch: Beef Sliders on King's Hawaiian Bread
+DESCRIPTION:Sides: Broccoli Slaw\, Sliced Pickles\, Granny Smith Apples
+END:VEVENT
+BEGIN:VEVENT
+UID:2026-09-30@lunchfeed.ryeschools
+DTSTAMP:20260903T023852Z
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20261001
+SUMMARY:Lunch: Challah Bread French Toast Brunch
+DESCRIPTION:Sides: Potato Rounds\, Sausage Patty\, Orange Wedges
+END:VEVENT
+END:VCALENDAR

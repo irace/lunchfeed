@@ -1,0 +1,65 @@
+name: Build lunch calendar
+
+on:
+  schedule:
+    # Check daily late in the month; --if-missing prevents repeat LLM calls.
+    - cron: "17 12 20-31 * *"
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to build (next, current, or YYYY-MM)"
+        required: false
+        default: "next"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: lunchfeed-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: sudo apt-get update && sudo apt-get install -y poppler-utils
+      - run: npm ci
+      - name: Build menu artifacts
+        shell: bash
+        run: |
+          args=(--month "${{ inputs.month || 'next' }}" --allow-unpublished)
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            args+=(--if-missing)
+          fi
+          npm run build -- "${args[@]}"
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_MODEL: minimax/minimax-m3:free
+      - name: Commit newly generated artifacts
+        run: |
+          if git diff --quiet -- docs; then
+            echo "No menu changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Update lunch menu artifacts"
+          git push
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

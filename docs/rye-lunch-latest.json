@@ -1,0 +1,172 @@
+{
+  "month": "2026-09",
+  "source": {
+    "page_url": "https://www.ryeschools.org/departments/food-service",
+    "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1786460907/ryeschoolsorg/o4fya7gjtaa8towufg7a/ElementarySeptemberMenu2026.jpg",
+    "asset_type": "image",
+    "extraction": "image-ocr",
+    "requested_model": "minimax/minimax-m3:free",
+    "model": "minimax/minimax-m3:free",
+    "generated_at": "2026-09-03T02:38:52.282Z"
+  },
+  "days": {
+    "2026-09-08": {
+      "title": "Chicken Tenders & Baked Waffle Fries",
+      "sides": [
+        "Steamed Corn",
+        "Fresh Apple"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-09": {
+      "title": "Shell Pasta Macaroni & Cheese (Buttered Pasta Available)",
+      "sides": [
+        "Cucumber Tomato Salad",
+        "Cantaloupe Slice"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-10": {
+      "title": "French Toast Sticks",
+      "sides": [
+        "Hard Boiled Egg",
+        "Hash Brown",
+        "Banana",
+        "Green Bell Peppers"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-11": {
+      "title": "Cheese or Pepperoni Pizza",
+      "sides": [
+        "Garden Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-14": {
+      "title": "Grilled Chicken",
+      "sides": [
+        "Quinoa Salad",
+        "Roasted Zucchini/Yellow Squash",
+        "Honeydew"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-15": {
+      "title": "Rotini Pasta Marinara/Meat Sauce (Buttered Pasta Available)",
+      "sides": [
+        "Garlic Bread",
+        "Sauteed Spinach",
+        "Kiwi"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-16": {
+      "title": "Cheese Quesadilla",
+      "sides": [
+        "Black Beans",
+        "Brown Rice with Pico",
+        "Sour Cream/Guacamole",
+        "Watermelon Slice"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-17": {
+      "title": "Greek Yogurt or Acai Bowl with Strawberry/Banana/Blueberries/Nut Free Granola/Chia Seed/Agave",
+      "sides": [],
+      "alt": "Mini Bagel Butter/Cream Cheese",
+      "notes": []
+    },
+    "2026-09-18": {
+      "title": "Cheese or Pepperoni Pizza",
+      "sides": [
+        "Caesar Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-22": {
+      "title": "Ramen Noodle Bar Yakisoba Noodles (GF Rice Noodle Available) with Grilled Chicken/Tofu",
+      "sides": [
+        "Shelled Edamame",
+        "Broccoli",
+        "Orange Slices",
+        "Fortune Cookie"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-23": {
+      "title": "Penne Chicken Rose with Pink Sauce or Butter",
+      "sides": [
+        "Fresh Basil",
+        "Garlic Bread",
+        "Roasted Broccoli",
+        "Orange Slices",
+        "Fortune Cookie"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-24": {
+      "title": "Taco Bowl with Seasoned Taco Meat over White Rice",
+      "sides": [
+        "Shredded Cheddar",
+        "Lettuce",
+        "Pico",
+        "Cilantro",
+        "Sour Cream/Guacamole",
+        "Watermelon Slice"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-25": {
+      "title": "Cheese or Pepperoni Pizza",
+      "sides": [
+        "Greek Salad with Feta",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-28": {
+      "title": "Boneless Chicken with BBQ or Honey Mustard",
+      "sides": [
+        "Roasted Kale",
+        "Veggie Pasta Salad"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-29": {
+      "title": "Beef Sliders on King's Hawaiian Bread",
+      "sides": [
+        "Broccoli Slaw",
+        "Sliced Pickles",
+        "Granny Smith Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-09-30": {
+      "title": "Challah Bread French Toast Brunch",
+      "sides": [
+        "Potato Rounds",
+        "Sausage Patty",
+        "Orange Wedges"
+      ],
+      "alt": "",
+      "notes": []
+    }
+  }
+}
