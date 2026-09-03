@@ -2,6 +2,7 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import {
+  DEFAULT_SCHOOL,
   FOOD_SERVICE_URL,
   MenuNotPublishedError,
   extractPdfText,
@@ -107,16 +108,19 @@ async function main() {
     );
   }
   const generatedAt = new Date();
+  const school = process.env.SCHOOL_NAME || DEFAULT_SCHOOL;
   const result = await structureMenu({
     apiKey: process.env.OPENROUTER_API_KEY,
     model: requestedModel,
     month,
+    school,
     text,
     images,
   });
-  const menu = validateMenu(result.data, month);
+  const menu = validateMenu(result.data, month, school, text);
   const data = {
     month,
+    school,
     source: {
       page_url: options.sourceUrl,
       asset_url: asset.url,

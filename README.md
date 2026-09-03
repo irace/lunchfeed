@@ -33,6 +33,11 @@ in `docs/`:
 - `rye-lunch-YYYY-MM.json` and `.ics` for history
 - `rye-lunch-latest.json` and `.ics` for stable consumers
 
+`SCHOOL_NAME` defaults to `Osborn`. On pizza Fridays, the event title is
+`Piazza Pizza Day` only when that school gets Piazza takeout; all other pizza
+Fridays are titled `Cafeteria Pizza Day`. The usual cheese-or-pepperoni choice
+is intentionally omitted from the announcement title.
+
 Useful options:
 
 ```sh

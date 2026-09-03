@@ -1,5 +1,6 @@
 {
   "month": "2026-09",
+  "school": "Osborn",
   "source": {
     "page_url": "https://www.ryeschools.org/departments/food-service",
     "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1786460907/ryeschoolsorg/o4fya7gjtaa8towufg7a/ElementarySeptemberMenu2026.jpg",
@@ -7,7 +8,7 @@
     "extraction": "image-ocr",
     "requested_model": "minimax/minimax-m3:free",
     "model": "minimax/minimax-m3:free",
-    "generated_at": "2026-09-03T02:38:52.282Z"
+    "generated_at": "2026-09-03T11:13:02.144Z"
   },
   "days": {
     "2026-09-08": {
@@ -33,14 +34,13 @@
       "sides": [
         "Hard Boiled Egg",
         "Hash Brown",
-        "Banana",
-        "Green Bell Peppers"
+        "Banana"
       ],
       "alt": "",
       "notes": []
     },
     "2026-09-11": {
-      "title": "Cheese or Pepperoni Pizza",
+      "title": "Cafeteria Pizza Day",
       "sides": [
         "Garden Salad",
         "Sliced Packaged Apples"
@@ -80,13 +80,13 @@
       "notes": []
     },
     "2026-09-17": {
-      "title": "Greek Yogurt or Acai Bowl with Strawberry/Banana/Blueberries/Nut Free Granola/Chia Seed/Agave",
+      "title": "Yogurt/Acai Bar with Greek Yogurt or Acai, Strawberry/Banana, Blueberries, Nut Free Granola, Chia Seed/Agave",
       "sides": [],
       "alt": "Mini Bagel Butter/Cream Cheese",
       "notes": []
     },
     "2026-09-18": {
-      "title": "Cheese or Pepperoni Pizza",
+      "title": "Piazza Pizza Day",
       "sides": [
         "Caesar Salad",
         "Sliced Packaged Apples"
@@ -106,9 +106,8 @@
       "notes": []
     },
     "2026-09-23": {
-      "title": "Penne Chicken Rose with Pink Sauce or Butter",
+      "title": "Penne Chicken Rose with Fresh Basil, Pink Sauce or Butter",
       "sides": [
-        "Fresh Basil",
         "Garlic Bread",
         "Roasted Broccoli",
         "Orange Slices",
@@ -118,12 +117,8 @@
       "notes": []
     },
     "2026-09-24": {
-      "title": "Taco Bowl with Seasoned Taco Meat over White Rice",
+      "title": "Taco Bowl with Seasoned Taco Meat, White Rice, Shredded Cheddar, Lettuce, Pico, Cilantro",
       "sides": [
-        "Shredded Cheddar",
-        "Lettuce",
-        "Pico",
-        "Cilantro",
         "Sour Cream/Guacamole",
         "Watermelon Slice"
       ],
@@ -131,7 +126,7 @@
       "notes": []
     },
     "2026-09-25": {
-      "title": "Cheese or Pepperoni Pizza",
+      "title": "Cafeteria Pizza Day",
       "sides": [
         "Greek Salad with Feta",
         "Sliced Packaged Apples"
@@ -159,10 +154,9 @@
       "notes": []
     },
     "2026-09-30": {
-      "title": "Challah Bread French Toast Brunch",
+      "title": "Brunch for Lunch: Challah Bread French Toast with Sausage Patty",
       "sides": [
         "Potato Rounds",
-        "Sausage Patty",
         "Orange Wedges"
       ],
       "alt": "",

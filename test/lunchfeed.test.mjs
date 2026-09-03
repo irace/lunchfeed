@@ -163,23 +163,43 @@ test("omits completely empty closure days", () => {
   assert.deepEqual(Object.keys(result.days), ["2026-09-08"]);
 });
 
-test("removes known menu boilerplate and makes pizza summaries specific", () => {
+test("classifies pizza Fridays for the selected school and removes the usual choice", () => {
   const result = validateMenu(
     {
       month: "2026-09",
-      days: [{
-        date: "2026-09-11",
-        title: "Pizza Day",
-        sides: ["Cheese or Pepperoni", "Garden Salad", "100% Fruit Juice", "Hormone Free Milk"],
-        alt: "",
-        notes: ["Pizza Pizza at Milton", "Local Jersey Farm produce"],
-      }],
+      days: [
+        {
+          date: "2026-09-11",
+          title: "Pizza Day",
+          sides: ["Cheese or Pepperoni", "Garden Salad", "100% Fruit Juice", "Hormone Free Milk"],
+          alt: "",
+          notes: ["Piazza Pizza at Milton", "Local Jersey Farm produce"],
+        },
+        {
+          date: "2026-09-18",
+          title: "Pizza Day",
+          sides: ["Cheese or Pepperoni", "Caesar Salad"],
+          alt: "",
+          notes: [],
+        },
+      ],
     },
     "2026-09",
+    "Osborn",
+    `CELL 2026-09-11 (Friday)
+Piazza Pizza at Milton
+CELL 2026-09-18 (Friday)
+Piazza Pizza at Osborn`,
   );
   assert.deepEqual(result.days["2026-09-11"], {
-    title: "Cheese or Pepperoni Pizza",
+    title: "Cafeteria Pizza Day",
     sides: ["Garden Salad"],
+    alt: "",
+    notes: [],
+  });
+  assert.deepEqual(result.days["2026-09-18"], {
+    title: "Piazza Pizza Day",
+    sides: ["Caesar Salad"],
     alt: "",
     notes: [],
   });

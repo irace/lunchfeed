@@ -45,6 +45,7 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENROUTER_MODEL: minimax/minimax-m3:free
+          SCHOOL_NAME: Osborn
       - name: Commit newly generated artifacts
         run: |
           if git diff --quiet -- docs; then

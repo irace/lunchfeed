@@ -13,6 +13,7 @@ import { createWorker, PSM } from "tesseract.js";
 
 export const FOOD_SERVICE_URL =
   "https://www.ryeschools.org/departments/food-service";
+export const DEFAULT_SCHOOL = "Osborn";
 
 export function isFreeOpenRouterModel(model) {
   return model === "openrouter/free" || model.endsWith(":free");
@@ -337,9 +338,30 @@ export async function ocrMenuImages(
             width: column === 4 ? width - (left + column * columnWidth) : columnWidth,
             height: bottom - top,
           };
+          await worker.setParameters({ tessedit_pageseg_mode: PSM.SINGLE_BLOCK });
           const { data } = await worker.recognize(image, { rectangle });
           const isoDate = date.toISOString().slice(0, 10);
-          cells.push(`CELL ${isoDate} (${WEEKDAY_NAMES[column + 1]})\n${data.text.trim()}`);
+          let footer = "";
+          if (column === 4) {
+            // Piazza rotation is printed in a tiny line at the very bottom of
+            // each Friday cell. A dedicated single-line pass reads it far more
+            // reliably than the general cell OCR.
+            await worker.setParameters({ tessedit_pageseg_mode: PSM.SINGLE_LINE });
+            const footerTopOffset = Math.round(spacing * 0.13);
+            const footerHeight = Math.round(spacing * 0.19);
+            const footerResult = await worker.recognize(image, {
+              rectangle: {
+                left: rectangle.left,
+                top: bottom - footerTopOffset,
+                width: rectangle.width,
+                height: footerHeight,
+              },
+            });
+            footer = `\nPIZZA FOOTER: ${footerResult.data.text.trim()}`;
+          }
+          cells.push(
+            `CELL ${isoDate} (${WEEKDAY_NAMES[column + 1]})\n${data.text.trim()}${footer}`,
+          );
         }
       }
       pages.push(`PAGE ${pageIndex + 1}\n${cells.join("\n\n")}`);
@@ -381,7 +403,7 @@ export const MENU_SCHEMA = {
   },
 };
 
-function menuPrompt(month) {
+function menuPrompt(month, school) {
   return `Extract the Rye elementary school LUNCH menu for ${month}.
 
 Return one entry per school day that has a main lunch. Omit weekends, blank days, and days marked no school. For each date:
@@ -390,7 +412,9 @@ Return one entry per school day that has a main lunch. Omit weekends, blank days
 - alt: a day-specific alternate, or an empty string
 - notes: only dietary accommodations tied to that date, not promotions, farm labels, school reminders, or parent invitations
 
-Always omit "100% Fruit Juice" and "Hormone Free Milk" even when they appear inside every date cell. Ignore breakfast, prices, payment instructions, USDA text, nutrition slogans, repeating global alternatives, "Pizza Pizza at [school]" promotions, local-farm labels, and kindergarten parent reminders. Treat "Mini Bagel Butter/Cream Cheese" as an alternate rather than a note or side. Use ISO dates in ${month}. Do not invent unclear text.
+Always omit "100% Fruit Juice" and "Hormone Free Milk" even when they appear inside every date cell. Ignore breakfast, prices, payment instructions, USDA text, nutrition slogans, repeating global alternatives, local-farm labels, and kindergarten parent reminders. Treat "Mini Bagel Butter/Cream Cheese" as an alternate rather than a note or side. Use ISO dates in ${month}. Do not invent unclear text.
+
+Pizza Friday rule for ${school}: read the small "Piazza Pizza at [school]" line in each Friday cell. If it says "Piazza Pizza at ${school}", set title to exactly "Piazza Pizza Day". For every other pizza Friday, set title to exactly "Cafeteria Pizza Day". Do not include "Cheese or Pepperoni" in the title, sides, alt, or notes. Do not copy the Piazza school line into notes.
 
 The OCR is grouped into Monday-Friday columns. Never shift food into an adjacent date when a school-closure cell is blank or graphical. A fuzzy digit must be resolved using this authoritative calendar:
 ${weekdayDateGuide(month)}
@@ -421,6 +445,7 @@ export async function structureMenu({
   apiKey,
   model,
   month,
+  school = DEFAULT_SCHOOL,
   text,
   images = [],
   fetchImpl = fetch,
@@ -429,7 +454,7 @@ export async function structureMenu({
   maxAttempts = 3,
 }) {
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is required");
-  const content = [{ type: "text", text: menuPrompt(month) }];
+  const content = [{ type: "text", text: menuPrompt(month, school) }];
   if (text) {
     content.push({ type: "text", text: `\nExtracted PDF text:\n${text}` });
   }
@@ -486,7 +511,7 @@ export async function structureMenu({
         throw new Error(message?.refusal || "OpenRouter returned no structured menu data");
       }
       const data = parseStructuredContent(message.content);
-      validateMenu(data, month);
+      validateMenu(data, month, school, text);
       return {
         data,
         model: completion.model || model,
@@ -499,10 +524,24 @@ export async function structureMenu({
   throw new Error(`OpenRouter failed after ${maxAttempts} attempts: ${lastError.message}`);
 }
 
-export function validateMenu(data, month) {
+function piazzaDatesForSchool(sourceText, school) {
+  const dates = new Set();
+  const schoolPattern = school.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const piazzaPattern = new RegExp(`\\bpiazza?\\s+pizza\\s+at\\s+${schoolPattern}\\b`, "i");
+  let currentDate = null;
+  for (const line of String(sourceText).split("\n")) {
+    const cell = line.match(/^CELL (\d{4}-\d{2}-\d{2})\b/);
+    if (cell) currentDate = cell[1];
+    else if (currentDate && piazzaPattern.test(line)) dates.add(currentDate);
+  }
+  return dates;
+}
+
+export function validateMenu(data, month, school = DEFAULT_SCHOOL, sourceText = "") {
   if (data?.month !== month || !Array.isArray(data.days)) {
     throw new Error(`Model output does not describe ${month}`);
   }
+  const piazzaDates = piazzaDatesForSchool(sourceText, school);
   const sorted = {};
   for (const entry of [...data.days].sort((a, b) => a.date.localeCompare(b.date))) {
     const { date } = entry;
@@ -526,22 +565,31 @@ export function validateMenu(data, month) {
     let alt = (entry.alt ?? "").trim();
     let notes = (entry.notes ?? []).map((value) => value.trim()).filter(Boolean);
 
+    const pizzaContext = [title, ...sides, alt, ...notes].join(" ");
+    if (parsed.getUTCDay() === 5 && /\bpizza\b/i.test(pizzaContext)) {
+      const schoolPattern = school.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const isPiazzaDay =
+        piazzaDates.has(date) ||
+        /^piazza pizza day$/i.test(title) ||
+        new RegExp(`\\bpiazza pizza at\\s+${schoolPattern}\\b`, "i").test(pizzaContext);
+      title = isPiazzaDay ? "Piazza Pizza Day" : "Cafeteria Pizza Day";
+      const isPizzaChoice = (value) =>
+        /^(?:cheese\s*(?:or|\/|&)\s*pepperoni|pepperoni\s*(?:or|\/|&)\s*cheese)(?:\s+pizza)?$/i.test(value);
+      sides = sides.filter((value) => !isPizzaChoice(value));
+      notes = notes.filter((value) => !isPizzaChoice(value));
+      if (isPizzaChoice(alt)) alt = "";
+    }
+
     const isDailyBoilerplate = (value) =>
       /^(?:100%\s*)?fruit juice$/i.test(value) || /^hormone free milk$/i.test(value);
     sides = sides.filter((value) => !isDailyBoilerplate(value));
     notes = notes.filter(
       (value) =>
         !isDailyBoilerplate(value) &&
-        !/^pizza pizza at\b/i.test(value) &&
+        !/^piazza? pizza at\b/i.test(value) &&
         !/\blocal (?:jersey|ny) farm\b/i.test(value) &&
         !/\bkindergarten\b|\bbring a parent\b/i.test(value),
     );
-
-    const pizzaType = sides.find((value) => /^cheese or pepperoni$/i.test(value));
-    if (/^pizza day$/i.test(title) && pizzaType) {
-      title = `${pizzaType} Pizza`;
-      sides = sides.filter((value) => value !== pizzaType);
-    }
 
     const miniBagel = [...sides, ...notes].find((value) =>
       /^mini bagel (?:with )?butter\/?cream ?cheese$/i.test(value),
