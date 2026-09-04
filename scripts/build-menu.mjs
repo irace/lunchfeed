@@ -5,15 +5,12 @@ import {
   DEFAULT_SCHOOL,
   FOOD_SERVICE_URL,
   MenuNotPublishedError,
-  extractPdfText,
   findElementaryMenuAsset,
   isFreeOpenRouterModel,
   menuToIcs,
   ocrMenuImages,
-  renderPdfPages,
   resolveMonth,
   structureMenu,
-  textLooksUsable,
   validateMenu,
 } from "../src/lunchfeed.mjs";
 
@@ -73,32 +70,16 @@ async function main() {
   const assetResponse = await fetchOk(asset.url);
   const assetBuffer = Buffer.from(await assetResponse.arrayBuffer());
   const extension = extname(new URL(asset.url).pathname).toLowerCase();
-  let extraction;
-  let text = "";
-  let images = [];
-  if (asset.kind === "pdf") {
-    text = extractPdfText(assetBuffer);
-    if (textLooksUsable(text)) extraction = "pdf-text";
-    else {
-      extraction = "pdf-vision";
-      images = renderPdfPages(assetBuffer).map((buffer) => ({ buffer, mimeType: "image/png" }));
-    }
-  } else {
-    extraction = "image-ocr";
-    const mimeTypes = {
-      ".jpg": "image/jpeg",
-      ".jpeg": "image/jpeg",
-      ".png": "image/png",
-      ".webp": "image/webp",
-    };
-    images = [{ buffer: assetBuffer, mimeType: mimeTypes[extension] ?? "image/jpeg" }];
-  }
-
-  if (images.length) {
-    text = await ocrMenuImages(images, { month });
-    images = [];
-    if (extraction === "pdf-vision") extraction = "pdf-ocr";
-  }
+  const mimeTypes = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+  };
+  const mimeType = mimeTypes[extension];
+  if (!mimeType) throw new Error(`Unsupported menu image type: ${extension || "unknown"}`);
+  const extraction = "image-ocr";
+  const text = await ocrMenuImages([{ buffer: assetBuffer, mimeType }], { month });
 
   if (!process.env.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required");
   const requestedModel = process.env.OPENROUTER_MODEL || "minimax/minimax-m3:free";
@@ -115,7 +96,6 @@ async function main() {
     month,
     school,
     text,
-    images,
   });
   const menu = validateMenu(result.data, month, school, text);
   const data = {

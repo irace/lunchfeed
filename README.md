@@ -1,13 +1,12 @@
 # Lunchfeed
 
 Lunchfeed fetches the public Rye City School District elementary lunch menu,
-uses a pinned free OpenRouter vision model once to turn the calendar into
+uses local OCR plus a pinned free OpenRouter text model to turn the calendar into
 structured data, and publishes static JSON and iCalendar files for Home Assistant.
 
-The district currently publishes either an image or a PDF. Lunchfeed handles
-both: it extracts PDF text when available and otherwise runs local Tesseract OCR
-on separately labeled weekday columns. Only the resulting text goes to the free
-model, which prevents blank calendar cells from shifting neighboring dates.
+The district publishes the menu as an image. Lunchfeed runs local Tesseract OCR
+on separately labeled calendar cells, then sends only the resulting text to the
+free model. This prevents blank calendar cells from shifting neighboring dates.
 
 ## Local setup
 
@@ -15,7 +14,6 @@ Requirements:
 
 - Node.js 20 or newer
 - An `OPENROUTER_API_KEY`
-- Poppler (`pdftotext` and `pdftoppm`) when the district publishes a PDF
 
 ```sh
 npm install
@@ -25,7 +23,7 @@ npm run discover -- --month current
 npm run build -- --month current
 ```
 
-The default model is `minimax/minimax-m3:free`, a pinned free vision endpoint.
+The default model is `minimax/minimax-m3:free`, a pinned free text endpoint.
 Set `OPENROUTER_MODEL` to use another model ending in `:free`. Lunchfeed refuses
 any model identifier that could incur inference charges. Generated files land
 in `docs/`:

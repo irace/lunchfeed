@@ -7,7 +7,6 @@ import {
   menuToIcs,
   resolveMonth,
   structureMenu,
-  textLooksUsable,
   validateMenu,
   weekdayDateGuide,
 } from "../src/lunchfeed.mjs";
@@ -20,7 +19,7 @@ const page = `
 </section>
 <section class="fsElement fsPanel">
   <header><h2>High School Lunch Menu</h2></header>
-  <a href="https://cdn.example/SeptemberHighSchool2026.pdf">HS</a>
+  <img src="https://cdn.example/SeptemberHighSchool2026.jpg" alt="High school menu">
 </section>`;
 
 test("resolves named months in UTC", () => {
@@ -48,12 +47,6 @@ test("does not substitute the currently published month", () => {
   );
 });
 
-test("recognizes usable menu text", () => {
-  const body = `Monday Tuesday Wednesday Thursday Friday ${"lunch ".repeat(120)}`;
-  assert.equal(textLooksUsable(body), true);
-  assert.equal(textLooksUsable("Monday lunch"), false);
-});
-
 test("provides authoritative weekday dates for fuzzy OCR", () => {
   assert.equal(
     weekdayDateGuide("2026-09"),
@@ -67,7 +60,7 @@ test("recognizes only OpenRouter's free model routes", () => {
   assert.equal(isFreeOpenRouterModel("openai/gpt-5-mini"), false);
 });
 
-test("uses a free OpenRouter model with JSON output and image input", async () => {
+test("uses a free OpenRouter model with JSON output and OCR text", async () => {
   let url;
   let request;
   const fetchImpl = async (value, options) => {
@@ -75,7 +68,7 @@ test("uses a free OpenRouter model with JSON output and image input", async () =
     request = options;
     return new Response(
       JSON.stringify({
-        model: "qwen/example-vision:free",
+        model: "qwen/example:free",
         choices: [{
           message: {
             content: '{"month":"2026-09","days":[{"date":"2026-09-01","title":"Tacos","sides":[],"alt":"","notes":[]}]}',
@@ -89,22 +82,19 @@ test("uses a free OpenRouter model with JSON output and image input", async () =
     apiKey: "test-key",
     model: "openrouter/free",
     month: "2026-09",
-    images: [{ buffer: Buffer.from("image"), mimeType: "image/jpeg" }],
+    text: "CELL 2026-09-01 (Tuesday)\nTacos",
     fetchImpl,
   });
   const body = JSON.parse(request.body);
   assert.equal(result.data.month, "2026-09");
-  assert.equal(result.model, "qwen/example-vision:free");
+  assert.equal(result.model, "qwen/example:free");
   assert.equal(url, "https://openrouter.ai/api/v1/chat/completions");
   assert.equal(request.headers.authorization, "Bearer test-key");
   assert.equal(body.model, "openrouter/free");
   assert.equal(body.provider.require_parameters, true);
   assert.equal(body.response_format.type, "json_object");
-  assert.equal(body.messages[1].content.at(-1).type, "image_url");
-  assert.match(
-    body.messages[1].content.at(-1).image_url.url,
-    /^data:image\/jpeg;base64/,
-  );
+  assert.equal(body.messages[1].content.at(-1).type, "text");
+  assert.match(body.messages[1].content.at(-1).text, /Extracted menu OCR text/);
 });
 
 test("retries a transient OpenRouter failure", async () => {

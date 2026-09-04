@@ -1,13 +1,4 @@
-import { spawnSync } from "node:child_process";
-import {
-  mkdtempSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
-import { tmpdir } from "node:os";
-import { basename, extname, join } from "node:path";
+import { basename, extname } from "node:path";
 import * as cheerio from "cheerio";
 import { createWorker, PSM } from "tesseract.js";
 
@@ -78,7 +69,6 @@ function decodeImageSizes(raw) {
 
 function assetKind(url) {
   const extension = extname(new URL(url).pathname).toLowerCase();
-  if (extension === ".pdf") return "pdf";
   if ([".jpg", ".jpeg", ".png", ".webp"].includes(extension)) return "image";
   return null;
 }
@@ -139,50 +129,6 @@ export function findElementaryMenuAsset(html, pageUrl, month) {
   );
   if (!match) throw new MenuNotPublishedError(month, unique);
   return match;
-}
-
-export function extractPdfText(pdfBuffer) {
-  const result = spawnSync("pdftotext", ["-layout", "-", "-"], {
-    input: pdfBuffer,
-    encoding: "utf8",
-    maxBuffer: 10 * 1024 * 1024,
-  });
-  if (result.error?.code === "ENOENT") return "";
-  if (result.status !== 0) return "";
-  return result.stdout.trim();
-}
-
-export function textLooksUsable(text) {
-  const weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday"];
-  const normalized = text.toLowerCase();
-  const weekdayCount = weekdays.filter((day) => normalized.includes(day)).length;
-  return weekdayCount >= 3 && text.split(/\s+/).length >= 120;
-}
-
-export function renderPdfPages(pdfBuffer) {
-  const directory = mkdtempSync(join(tmpdir(), "lunchfeed-"));
-  try {
-    const inputPath = join(directory, "menu.pdf");
-    const outputPrefix = join(directory, "menu");
-    writeFileSync(inputPath, pdfBuffer);
-    const result = spawnSync(
-      "pdftoppm",
-      ["-png", "-r", "180", inputPath, outputPrefix],
-      { encoding: "utf8", maxBuffer: 50 * 1024 * 1024 },
-    );
-    if (result.error?.code === "ENOENT") {
-      throw new Error("pdftoppm is required for image-only PDFs (install Poppler)");
-    }
-    if (result.status !== 0) {
-      throw new Error(`Could not render PDF: ${result.stderr.trim()}`);
-    }
-    return readdirSync(directory)
-      .filter((name) => /^menu-\d+\.png$/.test(name))
-      .sort()
-      .map((name) => readFileSync(join(directory, name)));
-  } finally {
-    rmSync(directory, { recursive: true, force: true });
-  }
 }
 
 const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -447,7 +393,6 @@ export async function structureMenu({
   month,
   school = DEFAULT_SCHOOL,
   text,
-  images = [],
   fetchImpl = fetch,
   baseUrl = "https://openrouter.ai/api/v1",
   requestTimeoutMs = 60_000,
@@ -456,16 +401,7 @@ export async function structureMenu({
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is required");
   const content = [{ type: "text", text: menuPrompt(month, school) }];
   if (text) {
-    content.push({ type: "text", text: `\nExtracted PDF text:\n${text}` });
-  }
-  for (const image of images) {
-    content.push({
-      type: "image_url",
-      image_url: {
-        url: `data:${image.mimeType};base64,${image.buffer.toString("base64")}`,
-        detail: "high",
-      },
-    });
+    content.push({ type: "text", text: `\nExtracted menu OCR text:\n${text}` });
   }
 
   const body = JSON.stringify({
