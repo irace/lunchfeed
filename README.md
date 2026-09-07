@@ -12,7 +12,7 @@ free model. This prevents blank calendar cells from shifting neighboring dates.
 
 Requirements:
 
-- Node.js 20 or newer
+- Node.js 24 or newer
 - An `OPENROUTER_API_KEY`
 
 ```sh

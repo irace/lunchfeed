@@ -3,17 +3,19 @@
   "school": "Osborn",
   "source": {
     "page_url": "https://www.ryeschools.org/departments/food-service",
-    "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1786460907/ryeschoolsorg/o4fya7gjtaa8towufg7a/ElementarySeptemberMenu2026.jpg",
+    "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1788550630/ryeschoolsorg/v5lekelilonktk1bhrcu/UpdatedSeptemberElementaryMenu26pptx.pdf",
     "asset_type": "image",
+    "asset_mime_type": "image/webp",
     "extraction": "image-ocr",
     "requested_model": "minimax/minimax-m3:free",
     "model": "minimax/minimax-m3:free",
-    "generated_at": "2026-09-03T11:13:02.144Z"
+    "generated_at": "2026-09-07T13:06:04.429Z"
   },
   "days": {
     "2026-09-08": {
-      "title": "Chicken Tenders & Baked Waffle Fries",
+      "title": "Chicken Tenders",
       "sides": [
+        "Baked Waffle Fries",
         "Steamed Corn",
         "Fresh Apple"
       ],
@@ -21,7 +23,7 @@
       "notes": []
     },
     "2026-09-09": {
-      "title": "Shell Pasta Macaroni & Cheese (Buttered Pasta Available)",
+      "title": "Shell Pasta with Macaroni & Cheese (Buttered Pasta Available)",
       "sides": [
         "Cucumber Tomato Salad",
         "Cantaloupe Slice"
@@ -34,7 +36,8 @@
       "sides": [
         "Hard Boiled Egg",
         "Hash Brown",
-        "Banana"
+        "Banana",
+        "Green Bell Peppers"
       ],
       "alt": "",
       "notes": []
@@ -59,7 +62,7 @@
       "notes": []
     },
     "2026-09-15": {
-      "title": "Rotini Pasta Marinara/Meat Sauce (Buttered Pasta Available)",
+      "title": "Rotini Pasta with Marinara/Meat Sauce (Buttered Pasta Available)",
       "sides": [
         "Garlic Bread",
         "Sauteed Spinach",
@@ -80,9 +83,14 @@
       "notes": []
     },
     "2026-09-17": {
-      "title": "Yogurt/Acai Bar with Greek Yogurt or Acai, Strawberry/Banana, Blueberries, Nut Free Granola, Chia Seed/Agave",
-      "sides": [],
-      "alt": "Mini Bagel Butter/Cream Cheese",
+      "title": "Yogurt/Acai Bar with Greek Yogurt or Acai",
+      "sides": [
+        "Strawberry/Banana",
+        "Blueberries",
+        "Nut Free Granola",
+        "Chia Seed/Agave"
+      ],
+      "alt": "Mini Bagel Butter/Cream cheese",
       "notes": []
     },
     "2026-09-18": {
@@ -95,10 +103,10 @@
       "notes": []
     },
     "2026-09-22": {
-      "title": "Ramen Noodle Bar Yakisoba Noodles (GF Rice Noodle Available) with Grilled Chicken/Tofu",
+      "title": "Yakisoba Noodles (GF Rice Noodle Available)",
       "sides": [
-        "Shelled Edamame",
-        "Broccoli",
+        "Grilled Chicken/Tofu",
+        "Shelled Edamame/Broccoli",
         "Orange Slices",
         "Fortune Cookie"
       ],
@@ -106,8 +114,9 @@
       "notes": []
     },
     "2026-09-23": {
-      "title": "Penne Chicken Rose with Fresh Basil, Pink Sauce or Butter",
+      "title": "Penne Chicken Rose with Pink Sauce or Butter",
       "sides": [
+        "Fresh Basil",
         "Garlic Bread",
         "Roasted Broccoli",
         "Orange Slices",
@@ -117,8 +126,11 @@
       "notes": []
     },
     "2026-09-24": {
-      "title": "Taco Bowl with Seasoned Taco Meat, White Rice, Shredded Cheddar, Lettuce, Pico, Cilantro",
+      "title": "Taco Bowl with Seasoned Taco Meat",
       "sides": [
+        "White Rice",
+        "Shredded Cheddar",
+        "Lettuce/Pico/Cilantro",
         "Sour Cream/Guacamole",
         "Watermelon Slice"
       ],
@@ -154,9 +166,10 @@
       "notes": []
     },
     "2026-09-30": {
-      "title": "Brunch for Lunch: Challah Bread French Toast with Sausage Patty",
+      "title": "Challah Bread French Toast",
       "sides": [
         "Potato Rounds",
+        "Sausage Patty",
         "Orange Wedges"
       ],
       "alt": "",

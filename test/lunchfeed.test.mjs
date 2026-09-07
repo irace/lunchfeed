@@ -5,6 +5,7 @@ import {
   findElementaryMenuAsset,
   isFreeOpenRouterModel,
   menuToIcs,
+  requireImageMimeType,
   resolveMonth,
   structureMenu,
   validateMenu,
@@ -22,6 +23,18 @@ const page = `
   <img src="https://cdn.example/SeptemberHighSchool2026.jpg" alt="High school menu">
 </section>`;
 
+const finalsiteDocumentPreview = `
+<section class="fsElement fsPanel">
+  <header><h2>Elementary School Lunch Menu</h2></header>
+  <article class="fsResourceTypePdf">
+    <a data-resource-title="UpdatedSeptemberElementaryMenu26pptx.pdf"
+       href="https://cdn.example/raw/UpdatedSeptemberElementaryMenu26pptx.pdf">
+      <img alt="UpdatedSeptemberElementaryMenu26pptx (PDF)"
+           data-image-sizes='[{%22url%22:%22https://cdn.example/images/f_auto,q_auto,t_small/UpdatedSeptemberElementaryMenu26pptx.pdf%22,%22width%22:256},{%22url%22:%22https://cdn.example/images/f_auto,q_auto/UpdatedSeptemberElementaryMenu26pptx.pdf%22,%22width%22:792}]'>
+    </a>
+  </article>
+</section>`;
+
 test("resolves named months in UTC", () => {
   const now = new Date("2026-12-20T23:00:00Z");
   assert.equal(resolveMonth("current", now), "2026-12");
@@ -37,6 +50,28 @@ test("discovers the target elementary image and ignores other panels", () => {
       kind: "image",
       label: "ElementarySeptemberMenu2026.jpg",
     },
+  );
+});
+
+test("discovers Finalsite's rendered image preview for a document resource", () => {
+  assert.deepEqual(
+    findElementaryMenuAsset(finalsiteDocumentPreview, "https://school.example/food", "2026-09"),
+    {
+      url: "https://cdn.example/images/f_auto,q_auto/UpdatedSeptemberElementaryMenu26pptx.pdf",
+      kind: "image",
+      label: "UpdatedSeptemberElementaryMenu26pptx (PDF)",
+    },
+  );
+});
+
+test("accepts rendered image responses and rejects raw documents", () => {
+  assert.equal(
+    requireImageMimeType(new Response("image", { headers: { "content-type": "image/webp" } })),
+    "image/webp",
+  );
+  assert.throws(
+    () => requireImageMimeType(new Response("document", { headers: { "content-type": "application/pdf" } })),
+    /unsupported content type: application\/pdf/,
   );
 });
 
@@ -151,6 +186,29 @@ test("omits completely empty closure days", () => {
     "2026-09",
   );
   assert.deepEqual(Object.keys(result.days), ["2026-09-08"]);
+});
+
+test("rejects model output that omits a populated OCR cell", () => {
+  assert.throws(
+    () => validateMenu(
+      {
+        month: "2026-09",
+        days: [
+          { date: "2026-09-15", title: "Pasta", sides: [], alt: "", notes: [] },
+        ],
+      },
+      "2026-09",
+      "Osborn",
+      `CELL 2026-09-14 (Monday)
+Grilled Chicken
+Quinoa Salad
+Roasted Zucchini
+Honeydew
+CELL 2026-09-15 (Tuesday)
+Pasta`,
+    ),
+    /omitted populated lunch dates: 2026-09-14/,
+  );
 });
 
 test("classifies pizza Fridays for the selected school and removes the usual choice", () => {

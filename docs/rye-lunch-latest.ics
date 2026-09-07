@@ -6,31 +6,33 @@ METHOD:PUBLISH
 X-WR-CALNAME:Rye Elementary Lunch
 BEGIN:VEVENT
 UID:2026-09-08@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260908
 DTEND;VALUE=DATE:20260909
-SUMMARY:Lunch: Chicken Tenders & Baked Waffle Fries
-DESCRIPTION:Sides: Steamed Corn\, Fresh Apple
+SUMMARY:Lunch: Chicken Tenders
+DESCRIPTION:Sides: Baked Waffle Fries\, Steamed Corn\, Fresh Apple
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-09@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260909
 DTEND;VALUE=DATE:20260910
-SUMMARY:Lunch: Shell Pasta Macaroni & Cheese (Buttered Pasta Available)
+SUMMARY:Lunch: Shell Pasta with Macaroni & Cheese (Buttered Pasta Availab
+ le)
 DESCRIPTION:Sides: Cucumber Tomato Salad\, Cantaloupe Slice
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-10@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260910
 DTEND;VALUE=DATE:20260911
 SUMMARY:Lunch: French Toast Sticks
-DESCRIPTION:Sides: Hard Boiled Egg\, Hash Brown\, Banana
+DESCRIPTION:Sides: Hard Boiled Egg\, Hash Brown\, Banana\, Green Bell Pep
+ pers
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-11@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260911
 DTEND;VALUE=DATE:20260912
 SUMMARY:Lunch: Cafeteria Pizza Day
@@ -38,7 +40,7 @@ DESCRIPTION:Sides: Garden Salad\, Sliced Packaged Apples
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-14@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260914
 DTEND;VALUE=DATE:20260915
 SUMMARY:Lunch: Grilled Chicken
@@ -47,16 +49,16 @@ DESCRIPTION:Sides: Quinoa Salad\, Roasted Zucchini/Yellow Squash\, Honeyd
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-15@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260915
 DTEND;VALUE=DATE:20260916
-SUMMARY:Lunch: Rotini Pasta Marinara/Meat Sauce (Buttered Pasta Available
- )
+SUMMARY:Lunch: Rotini Pasta with Marinara/Meat Sauce (Buttered Pasta Avai
+ lable)
 DESCRIPTION:Sides: Garlic Bread\, Sauteed Spinach\, Kiwi
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-16@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260916
 DTEND;VALUE=DATE:20260917
 SUMMARY:Lunch: Cheese Quesadilla
@@ -65,16 +67,16 @@ DESCRIPTION:Sides: Black Beans\, Brown Rice with Pico\, Sour Cream/Guacam
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-17@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260917
 DTEND;VALUE=DATE:20260918
-SUMMARY:Lunch: Yogurt/Acai Bar with Greek Yogurt or Acai\, Strawberry/Ban
- ana\, Blueberries\, Nut Free Granola\, Chia Seed/Agave
-DESCRIPTION:Alternate: Mini Bagel Butter/Cream Cheese
+SUMMARY:Lunch: Yogurt/Acai Bar with Greek Yogurt or Acai
+DESCRIPTION:Sides: Strawberry/Banana\, Blueberries\, Nut Free Granola\, C
+ hia Seed/Agave\nAlternate: Mini Bagel Butter/Cream cheese
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-18@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260918
 DTEND;VALUE=DATE:20260919
 SUMMARY:Lunch: Piazza Pizza Day
@@ -82,35 +84,34 @@ DESCRIPTION:Sides: Caesar Salad\, Sliced Packaged Apples
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-22@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260922
 DTEND;VALUE=DATE:20260923
-SUMMARY:Lunch: Ramen Noodle Bar Yakisoba Noodles (GF Rice Noodle Availabl
- e) with Grilled Chicken/Tofu
-DESCRIPTION:Sides: Shelled Edamame\, Broccoli\, Orange Slices\, Fortune C
- ookie
+SUMMARY:Lunch: Yakisoba Noodles (GF Rice Noodle Available)
+DESCRIPTION:Sides: Grilled Chicken/Tofu\, Shelled Edamame/Broccoli\, Oran
+ ge Slices\, Fortune Cookie
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-23@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260923
 DTEND;VALUE=DATE:20260924
-SUMMARY:Lunch: Penne Chicken Rose with Fresh Basil\, Pink Sauce or Butter
-DESCRIPTION:Sides: Garlic Bread\, Roasted Broccoli\, Orange Slices\, Fort
- une Cookie
+SUMMARY:Lunch: Penne Chicken Rose with Pink Sauce or Butter
+DESCRIPTION:Sides: Fresh Basil\, Garlic Bread\, Roasted Broccoli\, Orange
+  Slices\, Fortune Cookie
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-24@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260924
 DTEND;VALUE=DATE:20260925
-SUMMARY:Lunch: Taco Bowl with Seasoned Taco Meat\, White Rice\, Shredded 
- Cheddar\, Lettuce\, Pico\, Cilantro
-DESCRIPTION:Sides: Sour Cream/Guacamole\, Watermelon Slice
+SUMMARY:Lunch: Taco Bowl with Seasoned Taco Meat
+DESCRIPTION:Sides: White Rice\, Shredded Cheddar\, Lettuce/Pico/Cilantro\
+ , Sour Cream/Guacamole\, Watermelon Slice
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-25@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260925
 DTEND;VALUE=DATE:20260926
 SUMMARY:Lunch: Cafeteria Pizza Day
@@ -118,7 +119,7 @@ DESCRIPTION:Sides: Greek Salad with Feta\, Sliced Packaged Apples
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-28@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260928
 DTEND;VALUE=DATE:20260929
 SUMMARY:Lunch: Boneless Chicken with BBQ or Honey Mustard
@@ -126,7 +127,7 @@ DESCRIPTION:Sides: Roasted Kale\, Veggie Pasta Salad
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-29@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260929
 DTEND;VALUE=DATE:20260930
 SUMMARY:Lunch: Beef Sliders on King's Hawaiian Bread
@@ -134,11 +135,10 @@ DESCRIPTION:Sides: Broccoli Slaw\, Sliced Pickles\, Granny Smith Apples
 END:VEVENT
 BEGIN:VEVENT
 UID:2026-09-30@lunchfeed.ryeschools
-DTSTAMP:20260903T111302Z
+DTSTAMP:20260907T130604Z
 DTSTART;VALUE=DATE:20260930
 DTEND;VALUE=DATE:20261001
-SUMMARY:Lunch: Brunch for Lunch: Challah Bread French Toast with Sausage 
- Patty
-DESCRIPTION:Sides: Potato Rounds\, Orange Wedges
+SUMMARY:Lunch: Challah Bread French Toast
+DESCRIPTION:Sides: Potato Rounds\, Sausage Patty\, Orange Wedges
 END:VEVENT
 END:VCALENDAR

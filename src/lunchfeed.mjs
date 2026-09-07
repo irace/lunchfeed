@@ -67,7 +67,8 @@ function decodeImageSizes(raw) {
   }
 }
 
-function assetKind(url) {
+function assetKind(url, renderedImage = false) {
+  if (renderedImage) return "image";
   const extension = extname(new URL(url).pathname).toLowerCase();
   if ([".jpg", ".jpeg", ".png", ".webp"].includes(extension)) return "image";
   return null;
@@ -77,9 +78,11 @@ function monthMatches(label, month) {
   const [year, monthNumber] = month.split("-");
   const name = MONTH_NAMES[Number(monthNumber) - 1];
   const shortName = name.slice(0, 3);
+  const shortYear = year.slice(-2);
   const normalized = label.toLowerCase().replace(/[^a-z0-9]/g, "");
   const hasMonth = normalized.includes(name) || normalized.includes(shortName);
-  return hasMonth && normalized.includes(year);
+  const hasYear = normalized.includes(year) || normalized.includes(`menu${shortYear}`);
+  return hasMonth && hasYear;
 }
 
 export function findElementaryMenuAsset(html, pageUrl, month) {
@@ -100,6 +103,7 @@ export function findElementaryMenuAsset(html, pageUrl, month) {
       node.attr("data-resource-title"),
       node.attr("data-resource-filename"),
       node.attr("alt"),
+      node.closest("a").attr("data-resource-title"),
     ].filter(Boolean);
     const urls = [];
 
@@ -116,7 +120,10 @@ export function findElementaryMenuAsset(html, pageUrl, month) {
       } catch {
         continue;
       }
-      const kind = assetKind(url);
+      // Finalsite renders document previews through <img> URLs that retain the
+      // source filename extension. Treat the DOM element as authoritative and
+      // verify the HTTP response's MIME type before OCR.
+      const kind = assetKind(url, node.is("img"));
       if (!kind) continue;
       const label = labels[0] || basename(new URL(url).pathname);
       candidates.push({ url, kind, label });
@@ -129,6 +136,14 @@ export function findElementaryMenuAsset(html, pageUrl, month) {
   );
   if (!match) throw new MenuNotPublishedError(month, unique);
   return match;
+}
+
+export function requireImageMimeType(response) {
+  const mimeType = response.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
+  if (!["image/jpeg", "image/png", "image/webp"].includes(mimeType)) {
+    throw new Error(`Menu asset returned unsupported content type: ${mimeType || "unknown"}`);
+  }
+  return mimeType;
 }
 
 const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -473,11 +488,36 @@ function piazzaDatesForSchool(sourceText, school) {
   return dates;
 }
 
+function likelyLunchDates(sourceText) {
+  const dates = new Set();
+  let currentDate = null;
+  let contentLineCount = 0;
+  const finishCell = () => {
+    // Closure graphics produce at most a few OCR fragments; populated menu
+    // cells consistently contain an entree plus several accompanying lines.
+    if (currentDate && contentLineCount >= 4) dates.add(currentDate);
+  };
+  for (const rawLine of String(sourceText).split("\n")) {
+    const line = rawLine.trim();
+    const cell = line.match(/^CELL (\d{4}-\d{2}-\d{2})\b/);
+    if (cell) {
+      finishCell();
+      currentDate = cell[1];
+      contentLineCount = 0;
+    } else if (currentDate && line && !line.startsWith("PIZZA FOOTER:")) {
+      contentLineCount += 1;
+    }
+  }
+  finishCell();
+  return dates;
+}
+
 export function validateMenu(data, month, school = DEFAULT_SCHOOL, sourceText = "") {
   if (data?.month !== month || !Array.isArray(data.days)) {
     throw new Error(`Model output does not describe ${month}`);
   }
   const piazzaDates = piazzaDatesForSchool(sourceText, school);
+  const expectedLunchDates = likelyLunchDates(sourceText);
   const sorted = {};
   for (const entry of [...data.days].sort((a, b) => a.date.localeCompare(b.date))) {
     const { date } = entry;
@@ -537,6 +577,10 @@ export function validateMenu(data, month, school = DEFAULT_SCHOOL, sourceText = 
     }
 
     sorted[date] = { title, sides, alt, notes };
+  }
+  const missingDates = [...expectedLunchDates].filter((date) => !sorted[date]);
+  if (missingDates.length) {
+    throw new Error(`Model omitted populated lunch dates: ${missingDates.join(", ")}`);
   }
   if (Object.keys(sorted).length === 0) throw new Error("Model returned no lunch days");
   return { month, days: sorted };

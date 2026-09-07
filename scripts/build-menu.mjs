@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
-import { extname, join } from "node:path";
+import { join } from "node:path";
 import {
   DEFAULT_SCHOOL,
   FOOD_SERVICE_URL,
@@ -9,6 +9,7 @@ import {
   isFreeOpenRouterModel,
   menuToIcs,
   ocrMenuImages,
+  requireImageMimeType,
   resolveMonth,
   structureMenu,
   validateMenu,
@@ -36,9 +37,12 @@ function parseArgs(argv) {
   return options;
 }
 
-async function fetchOk(url) {
+async function fetchOk(url, headers = {}) {
   const response = await fetch(url, {
-    headers: { "user-agent": "lunchfeed/1.0 (+monthly school menu calendar)" },
+    headers: {
+      "user-agent": "lunchfeed/1.0 (+monthly school menu calendar)",
+      ...headers,
+    },
   });
   if (!response.ok) throw new Error(`GET ${url} failed: ${response.status}`);
   return response;
@@ -67,17 +71,11 @@ async function main() {
   console.log(`${month}: ${asset.url}`);
   if (options.discoverOnly) return;
 
-  const assetResponse = await fetchOk(asset.url);
+  const assetResponse = await fetchOk(asset.url, {
+    accept: "image/webp,image/png,image/jpeg,image/*;q=0.8",
+  });
+  const mimeType = requireImageMimeType(assetResponse);
   const assetBuffer = Buffer.from(await assetResponse.arrayBuffer());
-  const extension = extname(new URL(asset.url).pathname).toLowerCase();
-  const mimeTypes = {
-    ".jpg": "image/jpeg",
-    ".jpeg": "image/jpeg",
-    ".png": "image/png",
-    ".webp": "image/webp",
-  };
-  const mimeType = mimeTypes[extension];
-  if (!mimeType) throw new Error(`Unsupported menu image type: ${extension || "unknown"}`);
   const extraction = "image-ocr";
   const text = await ocrMenuImages([{ buffer: assetBuffer, mimeType }], { month });
 
@@ -105,6 +103,7 @@ async function main() {
       page_url: options.sourceUrl,
       asset_url: asset.url,
       asset_type: asset.kind,
+      asset_mime_type: mimeType,
       extraction,
       requested_model: requestedModel,
       model: result.model,
