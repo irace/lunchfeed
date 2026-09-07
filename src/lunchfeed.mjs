@@ -642,7 +642,7 @@ export function menuToIcs(data, generatedAt = new Date()) {
       `DTSTAMP:${stamp}`,
       `DTSTART;VALUE=DATE:${date.replaceAll("-", "")}`,
       `DTEND;VALUE=DATE:${nextDate(date).replaceAll("-", "")}`,
-      `SUMMARY:${escapeIcs(`Lunch: ${entry.title}`)}`,
+      `SUMMARY:${escapeIcs(entry.title)}`,
     );
     if (description.length) lines.push(`DESCRIPTION:${escapeIcs(description.join("\n"))}`);
     lines.push("END:VEVENT");

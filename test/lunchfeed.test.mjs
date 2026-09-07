@@ -270,7 +270,7 @@ test("emits valid all-day calendar boundaries and escaped content", () => {
   );
   assert.match(ics, /DTSTART;VALUE=DATE:20260901/);
   assert.match(ics, /DTEND;VALUE=DATE:20260902/);
-  assert.match(ics, /SUMMARY:Lunch: Tacos\\, Chicken/);
+  assert.match(ics, /SUMMARY:Tacos\\, Chicken/);
   assert.match(ics, /DESCRIPTION:Sides: Corn\\nAlternate: PBJ\\nWelcome\\; back/);
   assert.ok(ics.endsWith("END:VCALENDAR\r\n"));
 });

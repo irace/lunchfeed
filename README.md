@@ -83,8 +83,7 @@ morning automation can fetch today's event like this:
     lunch_events: >-
       {{ lunch_agenda.get('calendar.rye_lunch', {}).get('events', []) }}
     lunch_event: "{{ lunch_events[0] if lunch_events else {} }}"
-    lunch_title: >-
-      {{ lunch_event.get('summary', '') | replace('Lunch: ', '') }}
+    lunch_title: "{{ lunch_event.get('summary', '') }}"
     lunch_line: "{{ lunch_title if lunch_title else 'Not available' }}"
 ```
 
