@@ -3,11 +3,413 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rye Elementary Lunch</title>
+    <meta name="theme-color" content="#18392f">
+    <meta name="description" content="The monthly lunch menu for Osborn Elementary School in Rye, New York.">
+    <title>Osborn Elementary Lunch</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17322b;
+        --muted: #66766f;
+        --paper: #fffdf8;
+        --cream: #f4efe3;
+        --line: #ddd6c8;
+        --green: #216452;
+        --green-soft: #e3efe9;
+        --orange: #df6a3d;
+        --yellow: #f4c768;
+        --shadow: 0 18px 50px rgb(42 55 48 / 10%);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background:
+          radial-gradient(circle at 8% 2%, rgb(244 199 104 / 28%), transparent 22rem),
+          var(--cream);
+        color: var(--ink);
+        font-family: ui-rounded, "SF Pro Rounded", "Avenir Next", Avenir, system-ui, sans-serif;
+        line-height: 1.45;
+      }
+
+      a { color: inherit; }
+
+      .shell {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      header {
+        position: relative;
+        overflow: hidden;
+        padding: 52px 0 72px;
+        background: var(--ink);
+        color: white;
+      }
+
+      header::after {
+        position: absolute;
+        right: -90px;
+        bottom: -180px;
+        width: 430px;
+        height: 430px;
+        border: 76px solid rgb(255 255 255 / 6%);
+        border-radius: 50%;
+        content: "";
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        color: var(--yellow);
+        font-size: .78rem;
+        font-weight: 800;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--yellow);
+        content: "";
+      }
+
+      h1 {
+        max-width: 760px;
+        margin: 0;
+        font-size: clamp(2.5rem, 7vw, 5.2rem);
+        font-weight: 850;
+        letter-spacing: -.055em;
+        line-height: .98;
+      }
+
+      .intro {
+        display: flex;
+        position: relative;
+        z-index: 1;
+        align-items: end;
+        justify-content: space-between;
+        gap: 30px;
+      }
+
+      .month-lockup {
+        flex: 0 0 auto;
+        padding: 14px 18px;
+        border: 1px solid rgb(255 255 255 / 24%);
+        border-radius: 16px;
+        background: rgb(255 255 255 / 8%);
+        text-align: right;
+        backdrop-filter: blur(8px);
+      }
+
+      .month-lockup span { display: block; }
+      .month-lockup .month { font-size: 1.35rem; font-weight: 800; }
+      .month-lockup .school { color: rgb(255 255 255 / 70%); font-size: .82rem; }
+
+      main {
+        position: relative;
+        z-index: 2;
+        margin-top: -34px;
+        padding-bottom: 48px;
+      }
+
+      .calendar-card {
+        overflow: hidden;
+        border: 1px solid rgb(23 50 43 / 8%);
+        border-radius: 24px;
+        background: var(--paper);
+        box-shadow: var(--shadow);
+      }
+
+      .weekdays,
+      .calendar {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .weekdays {
+        border-bottom: 1px solid var(--line);
+        background: #f8f4eb;
+      }
+
+      .weekdays div {
+        padding: 18px 10px 14px;
+        color: var(--muted);
+        font-size: .74rem;
+        font-weight: 800;
+        letter-spacing: .11em;
+        text-transform: uppercase;
+      }
+
+      .day {
+        position: relative;
+        min-height: 205px;
+        padding: 17px 18px 20px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .day:nth-child(5n) { border-right: 0; }
+      .day.empty { background: #faf7f0; }
+      .day.unlisted { color: #8a938f; background: #faf8f3; }
+      .day.today { box-shadow: inset 0 0 0 3px var(--orange); }
+
+      .date-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .date {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--green-soft);
+        color: var(--green);
+        font-size: .88rem;
+        font-weight: 850;
+      }
+
+      .today .date { background: var(--orange); color: white; }
+
+      .tag {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--yellow);
+        color: #67460a;
+        font-size: .62rem;
+        font-weight: 900;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0 0 10px;
+        font-size: 1rem;
+        letter-spacing: -.018em;
+        line-height: 1.25;
+      }
+
+      .sides,
+      .alternate,
+      .no-lunch {
+        margin: 0;
+        color: var(--muted);
+        font-size: .78rem;
+        line-height: 1.5;
+      }
+
+      .alternate { margin-top: 8px; }
+      .alternate strong { color: var(--ink); }
+      .no-lunch { font-style: italic; }
+
+      .legend {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px 4px 0;
+        color: var(--muted);
+        font-size: .78rem;
+      }
+
+      .legend p { margin: 0; }
+
+      .actions { display: flex; flex-wrap: wrap; gap: 9px; }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 10px 15px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--paper);
+        color: var(--ink);
+        font-size: .78rem;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .button.primary { border-color: var(--green); background: var(--green); color: white; }
+      .button:hover { transform: translateY(-1px); }
+      .status { grid-column: 1 / -1; padding: 80px 24px; text-align: center; color: var(--muted); }
+
+      @media (max-width: 760px) {
+        .shell { width: min(100% - 24px, 560px); }
+        header { padding: 36px 0 58px; }
+        header::after { right: -180px; bottom: -230px; }
+        .intro { display: block; }
+        h1 { max-width: 440px; }
+        .month-lockup { display: inline-block; margin-top: 24px; text-align: left; }
+        main { margin-top: -24px; }
+        .calendar-card { overflow: visible; border: 0; background: transparent; box-shadow: none; }
+        .weekdays { display: none; }
+        .calendar { display: block; }
+        .day {
+          min-height: 0;
+          margin-bottom: 10px;
+          padding: 17px 18px;
+          border: 1px solid var(--line) !important;
+          border-radius: 17px;
+          background: var(--paper);
+          box-shadow: 0 8px 24px rgb(42 55 48 / 6%);
+        }
+        .day.empty { display: none; }
+        .day.unlisted { background: rgb(255 253 248 / 55%); box-shadow: none; }
+        .date-row { margin-bottom: 10px; }
+        .date::before {
+          margin-right: 7px;
+          color: var(--muted);
+          content: attr(data-weekday);
+          font-size: .68rem;
+          font-weight: 800;
+          letter-spacing: .08em;
+          text-transform: uppercase;
+        }
+        .date {
+          display: flex;
+          width: auto;
+          height: auto;
+          padding: 6px 10px;
+          border-radius: 999px;
+        }
+        .today .date::before { color: rgb(255 255 255 / 75%); }
+        h2 { font-size: 1.05rem; }
+        .sides, .alternate, .no-lunch { font-size: .82rem; }
+        .legend { display: block; }
+        .actions { margin-top: 16px; }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .day { animation: rise .4s both; animation-delay: calc(var(--index) * 18ms); }
+        .button { transition: transform .16s ease; }
+        @keyframes rise {
+          from { opacity: 0; transform: translateY(6px); }
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Rye Elementary Lunch</h1>
-    <p><a href="rye-lunch-latest.ics">Subscribe to the latest iCalendar feed</a></p>
-    <p><a href="rye-lunch-latest.json">View the latest JSON data</a></p>
+    <header>
+      <div class="shell intro">
+        <div>
+          <p class="eyebrow">Osborn Elementary</p>
+          <h1>What’s for lunch?</h1>
+        </div>
+        <div class="month-lockup" aria-live="polite">
+          <span class="month" id="month">Loading…</span>
+          <span class="school" id="school">Rye, New York</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="calendar-card" aria-label="Monthly lunch calendar">
+        <div class="weekdays" aria-hidden="true">
+          <div>Monday</div><div>Tuesday</div><div>Wednesday</div><div>Thursday</div><div>Friday</div>
+        </div>
+        <div class="calendar" id="calendar">
+          <p class="status">Setting the table…</p>
+        </div>
+      </section>
+
+      <footer class="legend">
+        <p id="updated">Menu information provided by Rye City School District.</p>
+        <nav class="actions" aria-label="Lunch feed links">
+          <a class="button primary" href="rye-lunch-latest.ics">Subscribe to calendar</a>
+          <a class="button" href="rye-lunch-latest.json">View JSON</a>
+        </nav>
+      </footer>
+    </main>
+
+    <script>
+      const calendar = document.querySelector("#calendar");
+      const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+      })[character]);
+
+      function localDateKey() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      }
+
+      function render(data) {
+        const [year, month] = data.month.split("-").map(Number);
+        const monthName = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+          .format(new Date(Date.UTC(year, month - 1, 1)));
+        const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+        const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+        const leadingWeekdays = Math.max(0, firstWeekday - 1);
+        const today = localDateKey();
+
+        document.querySelector("#month").textContent = monthName;
+        document.querySelector("#school").textContent = `${data.school} School · Rye, New York`;
+        document.title = `${monthName} Lunch · ${data.school}`;
+
+        const cells = Array.from({ length: leadingWeekdays }, (_, index) =>
+          `<div class="day empty" style="--index:${index}" aria-hidden="true"></div>`
+        );
+
+        let visualIndex = leadingWeekdays;
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const date = new Date(Date.UTC(year, month - 1, day));
+          const weekday = date.getUTCDay();
+          if (weekday === 0 || weekday === 6) continue;
+
+          const key = `${data.month}-${String(day).padStart(2, "0")}`;
+          const lunch = data.days[key];
+          const isToday = key === today;
+          const isPiazza = lunch?.title.toLowerCase().includes("piazza");
+          const classes = ["day", lunch ? "" : "unlisted", isToday ? "today" : ""].filter(Boolean).join(" ");
+          const details = lunch ? `
+            <h2>${escapeHtml(lunch.title)}</h2>
+            ${lunch.sides.length ? `<p class="sides">${lunch.sides.map(escapeHtml).join(" · ")}</p>` : ""}
+            ${lunch.alt ? `<p class="alternate"><strong>Alternate:</strong> ${escapeHtml(lunch.alt)}</p>` : ""}
+          ` : `<p class="no-lunch">No lunch listed</p>`;
+
+          cells.push(`
+            <article class="${classes}" style="--index:${visualIndex}" aria-label="${weekdays[weekday]}, ${monthName.split(" ")[0]} ${day}${lunch ? `: ${escapeHtml(lunch.title)}` : ": No lunch listed"}">
+              <div class="date-row">
+                <span class="date" data-weekday="${weekdays[weekday].slice(0, 3)}">${day}</span>
+                ${isPiazza ? '<span class="tag">Piazza day</span>' : ""}
+              </div>
+              ${details}
+            </article>
+          `);
+          visualIndex += 1;
+        }
+
+        while (cells.length % 5) cells.push('<div class="day empty" aria-hidden="true"></div>');
+        calendar.innerHTML = cells.join("");
+
+        const generated = new Date(data.source.generated_at);
+        document.querySelector("#updated").textContent = `Menu for ${data.school} · Updated ${new Intl.DateTimeFormat("en-US", {
+          month: "short", day: "numeric", year: "numeric"
+        }).format(generated)}`;
+      }
+
+      fetch("rye-lunch-latest.json", { cache: "no-cache" })
+        .then(response => {
+          if (!response.ok) throw new Error(`Menu request failed (${response.status})`);
+          return response.json();
+        })
+        .then(render)
+        .catch(error => {
+          console.error(error);
+          calendar.innerHTML = '<p class="status">The menu couldn’t be loaded. Please try again shortly.</p>';
+        });
+    </script>
   </body>
 </html>
