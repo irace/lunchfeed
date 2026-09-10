@@ -350,25 +350,32 @@
         const monthName = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
           .format(new Date(Date.UTC(year, month - 1, 1)));
         const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
-        const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
-        const leadingWeekdays = Math.max(0, firstWeekday - 1);
         const today = localDateKey();
 
         document.querySelector("#month").textContent = monthName;
         document.querySelector("#school").textContent = `${data.school} School · Rye, New York`;
         document.title = `${monthName} Lunch · ${data.school}`;
 
+        const visibleDays = [];
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const date = new Date(Date.UTC(year, month - 1, day));
+          const weekday = date.getUTCDay();
+          const key = `${data.month}-${String(day).padStart(2, "0")}`;
+          if (weekday !== 0 && weekday !== 6 && key >= today) visibleDays.push({ day, key, weekday });
+        }
+
+        if (!visibleDays.length) {
+          calendar.innerHTML = '<p class="status">There are no upcoming lunches in this menu.</p>';
+          return;
+        }
+
+        const leadingWeekdays = visibleDays[0].weekday - 1;
         const cells = Array.from({ length: leadingWeekdays }, (_, index) =>
           `<div class="day empty" style="--index:${index}" aria-hidden="true"></div>`
         );
 
         let visualIndex = leadingWeekdays;
-        for (let day = 1; day <= daysInMonth; day += 1) {
-          const date = new Date(Date.UTC(year, month - 1, day));
-          const weekday = date.getUTCDay();
-          if (weekday === 0 || weekday === 6) continue;
-
-          const key = `${data.month}-${String(day).padStart(2, "0")}`;
+        for (const { day, key, weekday } of visibleDays) {
           const lunch = data.days[key];
           const isToday = key === today;
           const isPiazza = lunch?.title.toLowerCase().includes("piazza");
