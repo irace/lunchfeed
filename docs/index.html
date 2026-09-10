@@ -44,7 +44,7 @@
       header {
         position: relative;
         overflow: hidden;
-        padding: 52px 0 72px;
+        padding: 42px 0 36px;
         background: var(--ink);
         color: white;
       }
@@ -93,9 +93,25 @@
         display: flex;
         position: relative;
         z-index: 1;
-        align-items: end;
+        align-items: center;
         justify-content: space-between;
         gap: 30px;
+      }
+
+      .hero-copy { flex: 1 1 auto; }
+
+      .hero-details {
+        display: flex;
+        flex: 0 1 auto;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .lunch-bear {
+        width: clamp(150px, 18vw, 220px);
+        height: auto;
+        margin: -24px -8px -34px 0;
+        filter: drop-shadow(0 14px 16px rgb(0 0 0 / 18%));
       }
 
       .month-lockup {
@@ -110,12 +126,12 @@
 
       .month-lockup span { display: block; }
       .month-lockup .month { font-size: 1.35rem; font-weight: 800; }
-      .month-lockup .school { color: rgb(255 255 255 / 70%); font-size: .82rem; }
+      .month-lockup .updated { color: rgb(255 255 255 / 70%); font-size: .82rem; }
 
       main {
         position: relative;
         z-index: 2;
-        margin-top: -34px;
+        margin-top: 26px;
         padding-bottom: 48px;
       }
 
@@ -216,14 +232,12 @@
       .legend {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 18px;
         padding: 22px 4px 0;
         color: var(--muted);
         font-size: .78rem;
       }
-
-      .legend p { margin: 0; }
 
       .actions { display: flex; flex-wrap: wrap; gap: 9px; }
 
@@ -247,12 +261,14 @@
 
       @media (max-width: 760px) {
         .shell { width: min(100% - 24px, 560px); }
-        header { padding: 36px 0 58px; }
+        header { padding: 34px 0 28px; }
         header::after { right: -180px; bottom: -230px; }
         .intro { display: block; }
         h1 { max-width: 440px; }
-        .month-lockup { display: inline-block; margin-top: 24px; text-align: left; }
-        main { margin-top: -24px; }
+        .hero-details { justify-content: space-between; margin-top: 22px; }
+        .lunch-bear { order: 2; width: min(42vw, 170px); margin: -66px -6px -34px 0; }
+        .month-lockup { text-align: left; }
+        main { margin-top: 18px; }
         .calendar-card { overflow: visible; border: 0; background: transparent; box-shadow: none; }
         .weekdays { display: none; }
         .calendar { display: block; }
@@ -287,8 +303,7 @@
         .today .date::before { color: rgb(255 255 255 / 75%); }
         h2 { font-size: 1.05rem; }
         .sides, .alternate, .no-lunch { font-size: .82rem; }
-        .legend { display: block; }
-        .actions { margin-top: 16px; }
+        .legend { justify-content: flex-start; }
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -303,13 +318,16 @@
   <body>
     <header>
       <div class="shell intro">
-        <div>
+        <div class="hero-copy">
           <p class="eyebrow">Osborn Elementary</p>
           <h1>What’s for lunch?</h1>
         </div>
-        <div class="month-lockup" aria-live="polite">
-          <span class="month" id="month">Loading…</span>
-          <span class="school" id="school">Rye, New York</span>
+        <div class="hero-details">
+          <img class="lunch-bear" src="assets/bear-lunch.png" alt="A cheerful bear enjoying pizza and a school lunch">
+          <div class="month-lockup" aria-live="polite">
+            <span class="month" id="month">Loading…</span>
+            <span class="updated" id="last-updated">Last updated</span>
+          </div>
         </div>
       </div>
     </header>
@@ -325,10 +343,10 @@
       </section>
 
       <footer class="legend">
-        <p id="updated">Menu information provided by Rye City School District.</p>
         <nav class="actions" aria-label="Lunch feed links">
           <a class="button primary" href="rye-lunch-latest.ics">Subscribe to calendar</a>
           <a class="button" href="rye-lunch-latest.json">View JSON</a>
+          <a class="button" id="source-link" href="https://www.ryeschools.org/departments/food-service" target="_blank" rel="noopener">View original</a>
         </nav>
       </footer>
     </main>
@@ -351,9 +369,13 @@
           .format(new Date(Date.UTC(year, month - 1, 1)));
         const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
         const today = localDateKey();
+        const generated = new Date(data.source.generated_at);
 
         document.querySelector("#month").textContent = monthName;
-        document.querySelector("#school").textContent = `${data.school} School · Rye, New York`;
+        document.querySelector("#last-updated").textContent = `Last updated ${new Intl.DateTimeFormat("en-US", {
+          month: "short", day: "numeric", year: "numeric"
+        }).format(generated)}`;
+        document.querySelector("#source-link").href = data.source.asset_url || data.source.page_url;
         document.title = `${monthName} Lunch · ${data.school}`;
 
         const visibleDays = [];
@@ -401,10 +423,6 @@
         while (cells.length % 5) cells.push('<div class="day empty" aria-hidden="true"></div>');
         calendar.innerHTML = cells.join("");
 
-        const generated = new Date(data.source.generated_at);
-        document.querySelector("#updated").textContent = `Menu for ${data.school} · Updated ${new Intl.DateTimeFormat("en-US", {
-          month: "short", day: "numeric", year: "numeric"
-        }).format(generated)}`;
       }
 
       fetch("rye-lunch-latest.json", { cache: "no-cache" })
