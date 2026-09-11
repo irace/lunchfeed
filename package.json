@@ -7,6 +7,7 @@
   "scripts": {
     "build": "node --env-file-if-exists=.env scripts/build-menu.mjs",
     "discover": "node --env-file-if-exists=.env scripts/build-menu.mjs --discover-only",
+    "fetch:days": "node scripts/fetch-day-schedule.mjs",
     "test": "node --test"
   },
   "engines": {

@@ -209,6 +209,20 @@
         text-transform: uppercase;
       }
 
+      .day-labels {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .cycle-day {
+        color: var(--muted);
+        font-size: .64rem;
+        font-weight: 850;
+        letter-spacing: .04em;
+        white-space: nowrap;
+      }
+
       h2 {
         margin: 0 0 10px;
         font-size: 1rem;
@@ -363,7 +377,18 @@
         return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
       }
 
-      function render(data) {
+      function parseDaySchedule(ics) {
+        const schedule = {};
+        const unfolded = ics.replace(/\r?\n[ \t]/g, "");
+        for (const block of unfolded.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) || []) {
+          const date = block.match(/^DTSTART(?:;[^:]*)?:(\d{4})(\d{2})(\d{2})$/m);
+          const summary = block.match(/^SUMMARY:(Day [1-6])$/m);
+          if (date && summary) schedule[`${date[1]}-${date[2]}-${date[3]}`] = summary[1];
+        }
+        return schedule;
+      }
+
+      function render(data, daySchedule = {}) {
         const [year, month] = data.month.split("-").map(Number);
         const monthName = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
           .format(new Date(Date.UTC(year, month - 1, 1)));
@@ -401,6 +426,7 @@
           const lunch = data.days[key];
           const isToday = key === today;
           const isPiazza = lunch?.title.toLowerCase().includes("piazza");
+          const cycleDay = daySchedule[key];
           const classes = ["day", lunch ? "" : "unlisted", isToday ? "today" : ""].filter(Boolean).join(" ");
           const details = lunch ? `
             <h2>${escapeHtml(lunch.title)}</h2>
@@ -409,10 +435,13 @@
           ` : `<p class="no-lunch">No lunch listed</p>`;
 
           cells.push(`
-            <article class="${classes}" style="--index:${visualIndex}" aria-label="${weekdays[weekday]}, ${monthName.split(" ")[0]} ${day}${lunch ? `: ${escapeHtml(lunch.title)}` : ": No lunch listed"}">
+            <article class="${classes}" style="--index:${visualIndex}" aria-label="${weekdays[weekday]}, ${monthName.split(" ")[0]} ${day}${cycleDay ? `, ${cycleDay}` : ""}${lunch ? `: ${escapeHtml(lunch.title)}` : ": No lunch listed"}">
               <div class="date-row">
                 <span class="date" data-weekday="${weekdays[weekday].slice(0, 3)}">${day}</span>
-                ${isPiazza ? '<span class="tag">Piazza day</span>' : ""}
+                <span class="day-labels">
+                  ${cycleDay ? `<span class="cycle-day">${cycleDay}</span>` : ""}
+                  ${isPiazza ? '<span class="tag">Piazza day</span>' : ""}
+                </span>
               </div>
               ${details}
             </article>
@@ -425,12 +454,16 @@
 
       }
 
-      fetch("rye-lunch-latest.json", { cache: "no-cache" })
-        .then(response => {
+      Promise.all([
+        fetch("rye-lunch-latest.json", { cache: "no-cache" }).then(response => {
           if (!response.ok) throw new Error(`Menu request failed (${response.status})`);
           return response.json();
-        })
-        .then(render)
+        }),
+        fetch("osborn-day-schedule.ics", { cache: "no-cache" })
+          .then(response => response.ok ? response.text() : "")
+          .catch(() => ""),
+      ])
+        .then(([menu, daySchedule]) => render(menu, parseDaySchedule(daySchedule)))
         .catch(error => {
           console.error(error);
           calendar.innerHTML = '<p class="status">The menu couldn’t be loaded. Please try again shortly.</p>';

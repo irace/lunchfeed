@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
+import vm from "node:vm";
 import {
   MenuNotPublishedError,
   findElementaryMenuAsset,
@@ -273,4 +275,45 @@ test("emits valid all-day calendar boundaries and escaped content", () => {
   assert.match(ics, /SUMMARY:Tacos\\, Chicken/);
   assert.match(ics, /DESCRIPTION:Sides: Corn\\nAlternate: PBJ\\nWelcome\\; back/);
   assert.ok(ics.endsWith("END:VCALENDAR\r\n"));
+});
+
+test("landing page overlays the Osborn cycle day from ICS", async () => {
+  const html = readFileSync(new URL("../docs/index.html", import.meta.url), "utf8");
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(script, "expected an inline landing-page script");
+
+  const menu = JSON.parse(
+    readFileSync(new URL("../docs/rye-lunch-latest.json", import.meta.url), "utf8"),
+  );
+  const daySchedule = readFileSync(
+    new URL("../docs/osborn-day-schedule.ics", import.meta.url),
+    "utf8",
+  );
+  const elements = new Map(
+    ["#calendar", "#month", "#last-updated", "#source-link"].map((selector) => [
+      selector,
+      { href: "", innerHTML: "", textContent: "" },
+    ]),
+  );
+  class FixedDate extends Date {
+    constructor(...args) {
+      super(...(args.length ? args : ["2026-09-11T12:00:00-04:00"]));
+    }
+  }
+
+  vm.runInNewContext(script, {
+    console,
+    Date: FixedDate,
+    document: { title: "", querySelector: (selector) => elements.get(selector) },
+    fetch: async (url) => ({
+      ok: true,
+      json: async () => menu,
+      text: async () => (url === "osborn-day-schedule.ics" ? daySchedule : ""),
+    }),
+    Intl,
+  });
+  await new Promise((resolve) => setImmediate(resolve));
+
+  assert.match(elements.get("#calendar").innerHTML, /cycle-day">Day 4</);
+  assert.match(elements.get("#calendar").innerHTML, /Friday, September 11, Day 4/);
 });

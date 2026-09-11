@@ -21,6 +21,7 @@ cp .env.example .env
 # Add your OpenRouter key to .env. Never commit this file.
 npm run discover -- --month current
 npm run build -- --month current
+npm run fetch:days
 ```
 
 The default model is `minimax/minimax-m3:free`, a pinned free text endpoint.
@@ -30,6 +31,7 @@ in `docs/`:
 
 - `rye-lunch-YYYY-MM.json` and `.ics` for history
 - `rye-lunch-latest.json` and `.ics` for stable consumers
+- `osborn-day-schedule.ics` for the six-day cycle shown on the landing page
 
 `SCHOOL_NAME` defaults to `Osborn`. On pizza Fridays, the event title is
 `Piazza Pizza Day` only when that school gets Piazza takeout; all other pizza
@@ -56,12 +58,14 @@ npm run build -- --out-dir /tmp/lunchfeed-output
 3. In **Settings > Pages**, choose **GitHub Actions** as the source.
 4. Run **Build lunch calendar** manually once, or wait for its late-month check.
 
-The workflow checks for next month's menu each day from the 20th through the
-31st. It calls the free router only after the correctly dated asset appears,
-commits the generated artifacts, and deploys `docs/` to Pages. A transient free
-model failure causes the run to fail and the next scheduled check retries it;
-each run makes at most three one-minute attempts and there is no paid fallback.
-A manual run rebuilds the selected month even when an artifact already exists.
+The workflow refreshes the public Osborn day-cycle ICS daily and shows its
+`Day 1` through `Day 6` labels on the landing-page calendar. It checks for next
+month's lunch menu only from the 20th through the 31st, and calls the free router
+only after the correctly dated asset appears. Changes are committed and `docs/`
+is deployed to Pages. A transient free-model failure causes the run to fail and
+the next scheduled check retries it; each run makes at most three one-minute
+attempts and there is no paid fallback. A manual run rebuilds the selected month
+even when an artifact already exists.
 
 ## Home Assistant
 

@@ -2,8 +2,8 @@ name: Build lunch calendar
 
 on:
   schedule:
-    # Check daily late in the month; --if-missing prevents repeat LLM calls.
-    - cron: "17 12 20-31 * *"
+    # Refresh the school day cycle daily; menu extraction remains limited to the 20th onward.
+    - cron: "17 12 * * *"
   workflow_dispatch:
     inputs:
       month:
@@ -33,11 +33,17 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Refresh Osborn day schedule
+        run: npm run fetch:days
       - name: Build menu artifacts
         shell: bash
         run: |
           args=(--month "${{ inputs.month || 'next' }}" --allow-unpublished)
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            if (( 10#$(date -u +%d) < 20 )); then
+              echo "Skipping next-month menu check before the 20th"
+              exit 0
+            fi
             args+=(--if-missing)
           fi
           npm run build -- "${args[@]}"
