@@ -11,7 +11,7 @@ import {
   ocrMenuImages,
   requireImageMimeType,
   resolveMonth,
-  structureMenu,
+  structureMenuWithFallback,
   validateMenu,
 } from "../src/lunchfeed.mjs";
 
@@ -80,17 +80,23 @@ async function main() {
   const text = await ocrMenuImages([{ buffer: assetBuffer, mimeType }], { month });
 
   if (!process.env.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required");
-  const requestedModel = process.env.OPENROUTER_MODEL || "liquid/lfm-2.5-2.6b:free";
-  if (!isFreeOpenRouterModel(requestedModel)) {
-    throw new Error(
-      `Refusing potentially paid OpenRouter model: ${requestedModel}. Use openrouter/free or a :free model.`,
-    );
+  const requestedModels = (process.env.OPENROUTER_MODELS || process.env.OPENROUTER_MODEL ||
+    "google/gemma-4-26b-a4b-it:free,dots-studio/dots-3-note-preview:free,qwen/qwen3.8-27b:free")
+    .split(",")
+    .map((model) => model.trim())
+    .filter(Boolean);
+  for (const model of requestedModels) {
+    if (!isFreeOpenRouterModel(model)) {
+      throw new Error(
+        `Refusing potentially paid OpenRouter model: ${model}. Use openrouter/free or a :free model.`,
+      );
+    }
   }
   const generatedAt = new Date();
   const school = process.env.SCHOOL_NAME || DEFAULT_SCHOOL;
-  const result = await structureMenu({
+  const result = await structureMenuWithFallback({
     apiKey: process.env.OPENROUTER_API_KEY,
-    model: requestedModel,
+    models: requestedModels,
     month,
     school,
     text,
@@ -105,7 +111,7 @@ async function main() {
       asset_type: asset.kind,
       asset_mime_type: mimeType,
       extraction,
-      requested_model: requestedModel,
+      requested_model: result.requestedModel,
       model: result.model,
       generated_at: generatedAt.toISOString(),
     },

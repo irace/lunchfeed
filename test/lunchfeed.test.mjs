@@ -10,6 +10,7 @@ import {
   requireImageMimeType,
   resolveMonth,
   structureMenu,
+  structureMenuWithFallback,
   validateMenu,
   weekdayDateGuide,
 } from "../src/lunchfeed.mjs";
@@ -159,6 +160,37 @@ test("retries a transient OpenRouter failure", async () => {
     maxAttempts: 2,
   });
   assert.equal(attempts, 2);
+});
+
+test("falls back to another free model when a provider fails", async () => {
+  const requestedModels = [];
+  const fetchImpl = async (_url, options) => {
+    const model = JSON.parse(options.body).model;
+    requestedModels.push(model);
+    if (model === "first/example:free") return new Response("busy", { status: 503 });
+    return new Response(
+      JSON.stringify({
+        model,
+        choices: [{
+          message: {
+            content: '{"month":"2026-09","days":[{"date":"2026-09-01","title":"Tacos","sides":[],"alt":"","notes":[]}]}',
+          },
+        }],
+      }),
+      { status: 200 },
+    );
+  };
+
+  const result = await structureMenuWithFallback({
+    apiKey: "test-key",
+    models: ["first/example:free", "second/example:free"],
+    month: "2026-09",
+    text: "CELL 2026-09-01 (Tuesday)\nTacos",
+    fetchImpl,
+  });
+
+  assert.deepEqual(requestedModels, ["first/example:free", "second/example:free"]);
+  assert.equal(result.requestedModel, "second/example:free");
 });
 
 test("validates, trims, and sorts model output", () => {

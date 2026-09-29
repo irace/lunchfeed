@@ -24,10 +24,11 @@ npm run build -- --month current
 npm run fetch:days
 ```
 
-The default model is `liquid/lfm-2.5-2.6b:free`, a pinned free text endpoint.
-Set `OPENROUTER_MODEL` to use another model ending in `:free`. Lunchfeed refuses
-any model identifier that could incur inference charges. Generated files land
-in `docs/`:
+By default Lunchfeed tries three free text models from different providers,
+moving to the next one if a provider is unavailable. Set `OPENROUTER_MODELS` to
+a comma-separated fallback list, or `OPENROUTER_MODEL` to use one model.
+Lunchfeed refuses any model identifier that could incur inference charges.
+Generated files land in `docs/`:
 
 - `rye-lunch-YYYY-MM.json` and `.ics` for history
 - `rye-lunch-latest.json` and `.ics` for stable consumers

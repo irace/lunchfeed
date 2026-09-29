@@ -475,6 +475,27 @@ export async function structureMenu({
   throw new Error(`OpenRouter failed after ${maxAttempts} attempts: ${lastError.message}`);
 }
 
+export async function structureMenuWithFallback({
+  models,
+  maxAttemptsPerModel = 1,
+  ...options
+}) {
+  const errors = [];
+  for (const model of models) {
+    try {
+      const result = await structureMenu({
+        ...options,
+        model,
+        maxAttempts: maxAttemptsPerModel,
+      });
+      return { ...result, requestedModel: model };
+    } catch (error) {
+      errors.push(`${model}: ${error.message}`);
+    }
+  }
+  throw new Error(`All OpenRouter models failed:\n${errors.join("\n")}`);
+}
+
 function piazzaDatesForSchool(sourceText, school) {
   const dates = new Set();
   const schoolPattern = school.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
