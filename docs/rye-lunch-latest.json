@@ -7,9 +7,9 @@
     "asset_type": "image",
     "asset_mime_type": "image/webp",
     "extraction": "image-ocr",
-    "requested_model": "minimax/minimax-m3:free",
-    "model": "minimax/minimax-m3:free",
-    "generated_at": "2026-09-07T13:13:27.513Z"
+    "requested_model": "dots-studio/dots-3-note-preview:free",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "generated_at": "2026-09-29T20:38:23.774Z"
   },
   "days": {
     "2026-09-08": {
@@ -23,16 +23,16 @@
       "notes": []
     },
     "2026-09-09": {
-      "title": "Shell Pasta with Macaroni & Cheese (Buttered Pasta Available)",
+      "title": "Shell Pasta Macaroni & Cheese",
       "sides": [
         "Cucumber Tomato Salad",
         "Cantaloupe Slice"
       ],
-      "alt": "",
+      "alt": "Buttered Pasta",
       "notes": []
     },
     "2026-09-10": {
-      "title": "Brunch for Lunch: French Toast Sticks",
+      "title": "French Toast Sticks",
       "sides": [
         "Hard Boiled Egg",
         "Hash Brown",
@@ -62,13 +62,13 @@
       "notes": []
     },
     "2026-09-15": {
-      "title": "Rotini Pasta with Marinara/Meat Sauce (Buttered Pasta Available)",
+      "title": "Rotini Pasta with Marinara/Meat Sauce",
       "sides": [
         "Garlic Bread",
         "Sauteed Spinach",
         "Kiwi"
       ],
-      "alt": "",
+      "alt": "Buttered Pasta",
       "notes": []
     },
     "2026-09-16": {
@@ -83,15 +83,15 @@
       "notes": []
     },
     "2026-09-17": {
-      "title": "Yogurt/Acai Bar: Greek Yogurt or Acai",
+      "title": "Yogurt/Acai Bar",
       "sides": [
-        "Strawberry",
-        "Banana",
+        "Greek Yogurt or Acai",
+        "Strawberry/Banana",
         "Blueberries",
         "Nut Free Granola",
         "Chia Seed/Agave"
       ],
-      "alt": "Mini Bagel Butter/Cream cheese",
+      "alt": "Mini Bagel Butter/Cream Cheese",
       "notes": []
     },
     "2026-09-18": {
@@ -104,36 +104,33 @@
       "notes": []
     },
     "2026-09-22": {
-      "title": "Ramen Noodle Bar: Yakisoba Noodles with Grilled Chicken/Tofu",
+      "title": "Ramen Noodle Bar",
       "sides": [
-        "GF Rice Noodle Available",
+        "Grilled Chicken/Tofu",
         "Shelled Edamame/Broccoli",
-        "Orange Slices",
-        "Fortune Cookie"
+        "Orange Slices /Fortune Cookie"
       ],
-      "alt": "",
+      "alt": "GF Rice Noodle",
       "notes": []
     },
     "2026-09-23": {
-      "title": "Penne Chicken Rose with Pink Sauce or Butter",
+      "title": "Penne Chicken Rose",
       "sides": [
         "Fresh Basil",
+        "Pink Sauce or Butter",
         "Garlic Bread",
         "Roasted Broccoli",
-        "Orange Slices",
-        "Fortune Cookie"
+        "Orange Slices /Fortune Cookie"
       ],
       "alt": "",
       "notes": []
     },
     "2026-09-24": {
-      "title": "Taco Bowl with Seasoned Taco Meat",
+      "title": "Taco Bowl",
       "sides": [
-        "White Rice",
-        "Shredded Cheddar",
-        "Lettuce",
-        "Pico",
-        "Cilantro",
+        "Seasoned Taco Meat",
+        "White Rice /Shredded Cheddar",
+        "Lettice/Pico/Cilantro",
         "Sour Cream/Guacamole",
         "Watermelon Slice"
       ],
@@ -150,8 +147,9 @@
       "notes": []
     },
     "2026-09-28": {
-      "title": "Boneless Chicken with BBQ or Honey Mustard",
+      "title": "Boneless Chicken",
       "sides": [
+        "BBQ or Honey Mustard",
         "Roasted Kale",
         "Veggie Pasta Salad"
       ],
@@ -159,17 +157,17 @@
       "notes": []
     },
     "2026-09-29": {
-      "title": "Beef Sliders on King's Hawaiian Bread",
+      "title": "Beef Sliders",
       "sides": [
-        "Broccoli Slaw",
-        "Sliced Pickles",
+        "King's Hawaiian Bread",
+        "Broccoli Slaw /Sliced Pickles",
         "Granny Smith Apples"
       ],
       "alt": "",
       "notes": []
     },
     "2026-09-30": {
-      "title": "Brunch for Lunch: Challah Bread French Toast",
+      "title": "Challah Bread French Toast",
       "sides": [
         "Potato Rounds",
         "Sausage Patty",
