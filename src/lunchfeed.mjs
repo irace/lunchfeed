@@ -430,9 +430,6 @@ export async function structureMenu({
       { role: "user", content },
     ],
       response_format: { type: "json_object" },
-    provider: {
-      require_parameters: true,
-    },
   });
 
   let lastError;

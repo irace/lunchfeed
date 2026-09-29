@@ -129,7 +129,7 @@ test("uses a free OpenRouter model with JSON output and OCR text", async () => {
   assert.equal(url, "https://openrouter.ai/api/v1/chat/completions");
   assert.equal(request.headers.authorization, "Bearer test-key");
   assert.equal(body.model, "openrouter/free");
-  assert.equal(body.provider.require_parameters, true);
+  assert.equal(body.provider, undefined);
   assert.equal(body.response_format.type, "json_object");
   assert.equal(body.messages[1].content.at(-1).type, "text");
   assert.match(body.messages[1].content.at(-1).text, /Extracted menu OCR text/);
