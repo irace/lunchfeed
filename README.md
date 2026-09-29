@@ -25,8 +25,9 @@ npm run fetch:days
 ```
 
 By default Lunchfeed tries three free text models from different providers,
-moving to the next one if a provider is unavailable. Set `OPENROUTER_MODELS` to
-a comma-separated fallback list, or `OPENROUTER_MODEL` to use one model.
+allowing each model up to ten minutes before moving to the next one if its
+provider is unavailable. Set `OPENROUTER_MODELS` to a comma-separated fallback
+list, or `OPENROUTER_MODEL` to use one model.
 Lunchfeed refuses any model identifier that could incur inference charges.
 Generated files land in `docs/`:
 

@@ -410,7 +410,7 @@ export async function structureMenu({
   text,
   fetchImpl = fetch,
   baseUrl = "https://openrouter.ai/api/v1",
-  requestTimeoutMs = 60_000,
+  requestTimeoutMs = 600_000,
   maxAttempts = 3,
 }) {
   if (!apiKey) throw new Error("OPENROUTER_API_KEY is required");
