@@ -61,13 +61,15 @@ npm run build -- --out-dir /tmp/lunchfeed-output
 4. Run **Build lunch calendar** manually once, or wait for its late-month check.
 
 The workflow refreshes the public Osborn day-cycle ICS daily and shows its
-`Day 1` through `Day 6` labels on the landing-page calendar. It checks for next
-month's lunch menu only from the 20th through the 31st, and calls the free router
-only after the correctly dated asset appears. Changes are committed and `docs/`
-is deployed to Pages. A transient free-model failure causes the run to fail and
-the next scheduled check retries it; each run makes at most three one-minute
-attempts and there is no paid fallback. A manual run rebuilds the selected month
-even when an artifact already exists.
+`Day 1` through `Day 6` labels on the landing-page calendar. From the 1st through
+the 19th it fills in the current month's menu if it is still missing; from the
+20th onward it looks for next month's menu. It calls a free model only after the
+correctly dated asset appears and skips processing once that month's artifact
+exists. Changes are committed and `docs/` is deployed to Pages. A transient
+free-model failure causes the run to fail and the next scheduled check retries
+it; each run tries up to three providers with a ten-minute timeout per provider,
+and there is no paid fallback. A manual run rebuilds the selected month even
+when an artifact already exists.
 
 ## Home Assistant
 

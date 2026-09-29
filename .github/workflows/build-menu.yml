@@ -2,7 +2,7 @@ name: Build lunch calendar
 
 on:
   schedule:
-    # Refresh the school day cycle daily; menu extraction remains limited to the 20th onward.
+    # Refresh the school day cycle and fill any missing current/upcoming menu daily.
     - cron: "17 12 * * *"
   workflow_dispatch:
     inputs:
@@ -40,11 +40,11 @@ jobs:
         run: |
           args=(--month "${{ inputs.month || 'next' }}" --allow-unpublished)
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
-            if (( 10#$(date -u +%d) < 20 )); then
-              echo "Skipping next-month menu check before the 20th"
-              exit 0
+            target_month=current
+            if (( 10#$(date -u +%d) >= 20 )); then
+              target_month=next
             fi
-            args+=(--if-missing)
+            args=(--month "$target_month" --allow-unpublished --if-missing)
           fi
           npm run build -- "${args[@]}"
         env:
