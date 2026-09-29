@@ -1,7 +1,7 @@
 # Lunchfeed
 
 Lunchfeed fetches the public Rye City School District elementary lunch menu,
-uses local OCR plus OpenRouter's free model router to turn the calendar into
+uses local OCR plus a pinned free OpenRouter text model to turn the calendar into
 structured data, and publishes static JSON and iCalendar files for Home Assistant.
 
 The district publishes the menu as an image. Lunchfeed runs local Tesseract OCR
@@ -24,10 +24,10 @@ npm run build -- --month current
 npm run fetch:days
 ```
 
-The default model is `openrouter/free`, which routes to an available free text
-model. Set `OPENROUTER_MODEL` to use a specific model ending in `:free`.
-Lunchfeed refuses any model identifier that could incur inference charges.
-Generated files land in `docs/`:
+The default model is `liquid/lfm-2.5-2.6b:free`, a pinned free text endpoint.
+Set `OPENROUTER_MODEL` to use another model ending in `:free`. Lunchfeed refuses
+any model identifier that could incur inference charges. Generated files land
+in `docs/`:
 
 - `rye-lunch-YYYY-MM.json` and `.ics` for history
 - `rye-lunch-latest.json` and `.ics` for stable consumers
