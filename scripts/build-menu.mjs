@@ -80,7 +80,7 @@ async function main() {
   const text = await ocrMenuImages([{ buffer: assetBuffer, mimeType }], { month });
 
   if (!process.env.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required");
-  const requestedModel = process.env.OPENROUTER_MODEL || "minimax/minimax-m3:free";
+  const requestedModel = process.env.OPENROUTER_MODEL || "openrouter/free";
   if (!isFreeOpenRouterModel(requestedModel)) {
     throw new Error(
       `Refusing potentially paid OpenRouter model: ${requestedModel}. Use openrouter/free or a :free model.`,

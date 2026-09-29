@@ -49,7 +49,7 @@ jobs:
           npm run build -- "${args[@]}"
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          OPENROUTER_MODEL: minimax/minimax-m3:free
+          OPENROUTER_MODEL: openrouter/free
           SCHOOL_NAME: Osborn
       - name: Commit newly generated artifacts
         run: |
