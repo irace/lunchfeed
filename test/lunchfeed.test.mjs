@@ -6,6 +6,7 @@ import {
   MenuNotPublishedError,
   findElementaryMenuAsset,
   isFreeOpenRouterModel,
+  mergeMenus,
   menuToIcs,
   requireImageMimeType,
   resolveMonth,
@@ -333,27 +334,71 @@ test("emits valid all-day calendar boundaries and escaped content", () => {
   assert.ok(ics.endsWith("END:VCALENDAR\r\n"));
 });
 
-test("landing page overlays the Osborn cycle day from ICS", async () => {
+test("merges monthly menus into one chronologically ordered feed", () => {
+  const september = {
+    month: "2026-09",
+    school: "Osborn",
+    source: { generated_at: "2026-09-01T12:00:00Z" },
+    days: {
+      "2026-09-30": { title: "Pasta", sides: [], alt: "", notes: [] },
+    },
+  };
+  const october = {
+    month: "2026-10",
+    school: "Osborn",
+    source: { generated_at: "2026-09-28T12:00:00Z" },
+    days: {
+      "2026-10-01": { title: "Tacos", sides: [], alt: "", notes: [] },
+    },
+  };
+
+  const rolling = mergeMenus([october, september]);
+  assert.deepEqual(rolling.months.map((menu) => menu.month), ["2026-09", "2026-10"]);
+  assert.equal(rolling.generated_at, "2026-09-28T12:00:00Z");
+  const ics = menuToIcs(rolling, new Date(rolling.generated_at));
+  assert.match(ics, /DTSTART;VALUE=DATE:20260930/);
+  assert.match(ics, /DTSTART;VALUE=DATE:20261001/);
+  assert.ok(ics.indexOf("20260930") < ics.indexOf("20261001"));
+});
+
+test("rejects duplicate months in a rolling feed", () => {
+  const menu = { month: "2026-09", school: "Osborn", days: {} };
+  assert.throws(() => mergeMenus([menu, menu]), /Duplicate menu month/);
+});
+
+test("landing page defaults to the current month and navigates adjacent menus", async () => {
   const html = readFileSync(new URL("../docs/index.html", import.meta.url), "utf8");
   const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(script, "expected an inline landing-page script");
 
   const menu = JSON.parse(
-    readFileSync(new URL("../docs/rye-lunch-latest.json", import.meta.url), "utf8"),
+    readFileSync(new URL("../docs/rye-lunch-2026-09.json", import.meta.url), "utf8"),
   );
+  const feed = mergeMenus([menu, {
+    month: "2026-10",
+    school: "Osborn",
+    source: { ...menu.source, generated_at: "2026-09-30T12:00:00Z" },
+    days: {
+      "2026-10-01": { title: "Tacos", sides: [], alt: "", notes: [] },
+    },
+  }]);
   const daySchedule = readFileSync(
     new URL("../docs/osborn-day-schedule.ics", import.meta.url),
     "utf8",
   );
   const elements = new Map(
-    ["#calendar", "#month", "#last-updated", "#source-link"].map((selector) => [
-      selector,
-      { href: "", innerHTML: "", textContent: "" },
-    ]),
+    ["#calendar", "#month", "#last-updated", "#source-link", "#previous-month", "#next-month"]
+      .map((selector) => [selector, {
+        href: "",
+        innerHTML: "",
+        textContent: "",
+        disabled: false,
+        addEventListener(type, listener) { this[type] = listener; },
+      }]),
   );
   class FixedDate extends Date {
     constructor(...args) {
-      super(...(args.length ? args : ["2026-09-11T12:00:00-04:00"]));
+      super(...(args.length ? args : ["2026-10-01T12:00:00-04:00"]));
     }
   }
 
@@ -363,13 +408,22 @@ test("landing page overlays the Osborn cycle day from ICS", async () => {
     document: { title: "", querySelector: (selector) => elements.get(selector) },
     fetch: async (url) => ({
       ok: true,
-      json: async () => menu,
+      json: async () => feed,
       text: async () => (url === "osborn-day-schedule.ics" ? daySchedule : ""),
     }),
     Intl,
   });
   await new Promise((resolve) => setImmediate(resolve));
 
+  assert.equal(elements.get("#month").textContent, "October 2026");
+  assert.match(elements.get("#calendar").innerHTML, /Thursday, October 1(?:, Day 5)?: Tacos/);
+  assert.equal(elements.get("#previous-month").disabled, false);
+  assert.equal(elements.get("#next-month").disabled, true);
+
+  elements.get("#previous-month").click();
+  assert.equal(elements.get("#month").textContent, "September 2026");
   assert.match(elements.get("#calendar").innerHTML, /cycle-day">Day 4</);
   assert.match(elements.get("#calendar").innerHTML, /Friday, September 11, Day 4/);
+  assert.equal(elements.get("#previous-month").disabled, true);
+  assert.equal(elements.get("#next-month").disabled, false);
 });

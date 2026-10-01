@@ -1,0 +1,215 @@
+{
+  "month": "2026-10",
+  "school": "Osborn",
+  "source": {
+    "page_url": "https://www.ryeschools.org/departments/food-service",
+    "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1790796739/ryeschoolsorg/cemdsfgjzazx2ewhbbib/octoberelementarymenuupdated9-28.pdf",
+    "asset_type": "image",
+    "asset_mime_type": "image/webp",
+    "extraction": "image-ocr",
+    "requested_model": "dots-studio/dots-3-note-preview:free",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "generated_at": "2026-10-01T13:54:34.278Z"
+  },
+  "days": {
+    "2026-10-01": {
+      "title": "Beef Nachos",
+      "sides": [
+        "Tostitos Scoops Bag",
+        "Shredded Cheese",
+        "Salsa/Guac/Sour Cream",
+        "Black Beans"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-02": {
+      "title": "Cafeteria Pizza Day",
+      "sides": [
+        "Caesar Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-05": {
+      "title": "Chicken Tenders",
+      "sides": [
+        "Potato Rounds",
+        "Roasted Kale",
+        "Fresh Fruit Basket"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-06": {
+      "title": "Greek Yogurt/Acai Strawberry/Banana",
+      "sides": [
+        "Nut Free Granola",
+        "Chia Seed/Agave"
+      ],
+      "alt": "Mini Bagel with Butter/CC/SunButter",
+      "notes": []
+    },
+    "2026-10-07": {
+      "title": "Barilla Shell Baked Macaroni & Cheese",
+      "sides": [
+        "Cucumber/Tomato Salad",
+        "Cantaloupe Slice"
+      ],
+      "alt": "Pasta with Butter Available",
+      "notes": []
+    },
+    "2026-10-08": {
+      "title": "Fluffy Pancakes, Sausage Patty, Hash Brown",
+      "sides": [
+        "Fresh Banana"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-09": {
+      "title": "Piazza Pizza Day",
+      "sides": [
+        "Garden Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-13": {
+      "title": "Hamburger/Cheeseburger on Whole Grain Roll",
+      "sides": [
+        "Baked French Fries",
+        "Yellow Squash",
+        "Apple Sauce Cup"
+      ],
+      "alt": "Veggie Burger Available",
+      "notes": []
+    },
+    "2026-10-14": {
+      "title": "Orange Chicken",
+      "sides": [
+        "Jasmine Rice",
+        "Steamed Broccoli",
+        "Fortune Cookie",
+        "Orange Slices"
+      ],
+      "alt": "Sushi Day at Midland",
+      "notes": []
+    },
+    "2026-10-15": {
+      "title": "Cavatappi Pasta with Marinara/Meat Sauce",
+      "sides": [
+        "Toasted Garlic Bread",
+        "Fresh Grape Cup",
+        "Steamed Spinach"
+      ],
+      "alt": "Buttered Pasta Available",
+      "notes": []
+    },
+    "2026-10-16": {
+      "title": "Cafeteria Pizza Day",
+      "sides": [
+        "Spinach Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-19": {
+      "title": "Chicken Patty Deluxe on Brioche Roll",
+      "sides": [
+        "Baked French Fries",
+        "Green Leaf Lettuce/Roma Tomato",
+        "Apple Sauce Cup"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-20": {
+      "title": "Beef Sliders on King's Hawaiian Roll",
+      "sides": [
+        "Broccoli Slaw",
+        "Sliced Pickles",
+        "Fresh Melon Slice"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-21": {
+      "title": "Cheese Quesadilla",
+      "sides": [
+        "Brown Rice with Black Beans",
+        "Pico de Gallo",
+        "Sour Cream/Guac"
+      ],
+      "alt": "Sushi at Milton",
+      "notes": []
+    },
+    "2026-10-22": {
+      "title": "French Toast Sticks, Breakfast Potatoes, Hard Boiled Egg",
+      "sides": [
+        "Cherry Tomato Cup",
+        "Sliced Kiwi"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-23": {
+      "title": "Cafeteria Pizza Day",
+      "sides": [
+        "Arugula Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-26": {
+      "title": "Boneless Chicken with BBQ/Honey Mustard",
+      "sides": [
+        "Potato Smiles",
+        "Steamed Corn",
+        "Sliced Oranges"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-27": {
+      "title": "Barilla Rotini Pasta with Pink/Meat Sauce/Butter",
+      "sides": [
+        "Toasted Garlic Bread",
+        "Sautéed Spinach",
+        "Sliced Melon"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-28": {
+      "title": "Grilled Cheese and Chicken Noodle Soup",
+      "sides": [
+        "Garden Salad",
+        "Apple Sauce Cup"
+      ],
+      "alt": "Chicken Noodle 160z (not included with meal)",
+      "notes": []
+    },
+    "2026-10-29": {
+      "title": "Challah Bread French Toast, Sausage Links, Hash Brown",
+      "sides": [
+        "Fresh Banana"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-10-30": {
+      "title": "Piazza Pizza Day",
+      "sides": [
+        "Greek Salad with Feta",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    }
+  }
+}

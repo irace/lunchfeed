@@ -650,7 +650,9 @@ export function menuToIcs(data, generatedAt = new Date()) {
     "X-WR-CALNAME:Rye Elementary Lunch",
   ];
 
-  for (const [date, entry] of Object.entries(data.days)) {
+  const menus = data.months ?? [data];
+  const entries = menus.flatMap((menu) => Object.entries(menu.days));
+  for (const [date, entry] of entries.sort(([left], [right]) => left.localeCompare(right))) {
     const description = [];
     if (entry.sides.length) description.push(`Sides: ${entry.sides.join(", ")}`);
     if (entry.alt) description.push(`Alternate: ${entry.alt}`);
@@ -668,4 +670,39 @@ export function menuToIcs(data, generatedAt = new Date()) {
   }
   lines.push("END:VCALENDAR", "");
   return lines.map(foldIcsLine).join("\r\n");
+}
+
+export function mergeMenus(menus) {
+  if (!Array.isArray(menus) || menus.length === 0) {
+    throw new Error("At least one monthly menu is required");
+  }
+
+  const months = [...menus].sort((left, right) => left.month.localeCompare(right.month));
+  const school = months[0].school;
+  const seenMonths = new Set();
+  const seenDates = new Set();
+  for (const menu of months) {
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(menu.month) || !menu.days) {
+      throw new Error("Invalid monthly menu artifact");
+    }
+    if (menu.school !== school) throw new Error("Cannot merge menus for different schools");
+    if (seenMonths.has(menu.month)) throw new Error(`Duplicate menu month: ${menu.month}`);
+    seenMonths.add(menu.month);
+    for (const date of Object.keys(menu.days)) {
+      if (!date.startsWith(`${menu.month}-`)) throw new Error(`Menu date does not match ${menu.month}: ${date}`);
+      if (seenDates.has(date)) throw new Error(`Duplicate menu date: ${date}`);
+      seenDates.add(date);
+    }
+  }
+
+  const generatedAt = months
+    .map((menu) => menu.source?.generated_at)
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  return {
+    school,
+    ...(generatedAt ? { generated_at: generatedAt } : {}),
+    months,
+  };
 }

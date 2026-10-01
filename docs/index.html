@@ -115,7 +115,10 @@
       }
 
       .month-lockup {
+        display: flex;
         flex: 0 0 auto;
+        align-items: center;
+        gap: 12px;
         padding: 14px 18px;
         border: 1px solid rgb(255 255 255 / 24%);
         border-radius: 16px;
@@ -127,6 +130,18 @@
       .month-lockup span { display: block; }
       .month-lockup .month { font-size: 1.35rem; font-weight: 800; }
       .month-lockup .updated { color: rgb(255 255 255 / 70%); font-size: .82rem; }
+      .month-nav {
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgb(255 255 255 / 28%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 10%);
+        color: white;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 800;
+      }
+      .month-nav:disabled { opacity: .28; cursor: default; }
 
       main.shell {
         position: relative;
@@ -339,8 +354,12 @@
         <div class="hero-details">
           <img class="lunch-bear" src="assets/bear-lunch.png" alt="A cheerful bear enjoying pizza and a school lunch">
           <div class="month-lockup" aria-live="polite">
-            <span class="month" id="month">Loading…</span>
-            <span class="updated" id="last-updated">Last updated</span>
+            <button class="month-nav" id="previous-month" type="button" aria-label="Show previous month">←</button>
+            <div>
+              <span class="month" id="month">Loading…</span>
+              <span class="updated" id="last-updated">Last updated</span>
+            </div>
+            <button class="month-nav" id="next-month" type="button" aria-label="Show next month">→</button>
           </div>
         </div>
       </div>
@@ -367,6 +386,8 @@
 
     <script>
       const calendar = document.querySelector("#calendar");
+      const previousMonth = document.querySelector("#previous-month");
+      const nextMonth = document.querySelector("#next-month");
       const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, character => ({
         "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
@@ -388,7 +409,7 @@
         return schedule;
       }
 
-      function render(data, daySchedule = {}) {
+      function render(data, daySchedule = {}, position = 0, monthCount = 1) {
         const [year, month] = data.month.split("-").map(Number);
         const monthName = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
           .format(new Date(Date.UTC(year, month - 1, 1)));
@@ -402,13 +423,17 @@
         }).format(generated)}`;
         document.querySelector("#source-link").href = data.source.asset_url || data.source.page_url;
         document.title = `${monthName} Lunch · ${data.school}`;
+        previousMonth.disabled = position === 0;
+        nextMonth.disabled = position === monthCount - 1;
 
         const visibleDays = [];
         for (let day = 1; day <= daysInMonth; day += 1) {
           const date = new Date(Date.UTC(year, month - 1, day));
           const weekday = date.getUTCDay();
           const key = `${data.month}-${String(day).padStart(2, "0")}`;
-          if (weekday !== 0 && weekday !== 6 && key >= today) visibleDays.push({ day, key, weekday });
+          if (weekday !== 0 && weekday !== 6 && (data.month !== today.slice(0, 7) || key >= today)) {
+            visibleDays.push({ day, key, weekday });
+          }
         }
 
         if (!visibleDays.length) {
@@ -463,7 +488,23 @@
           .then(response => response.ok ? response.text() : "")
           .catch(() => ""),
       ])
-        .then(([menu, daySchedule]) => render(menu, parseDaySchedule(daySchedule)))
+        .then(([feed, daySchedule]) => {
+          const menus = (feed.months ?? [feed]).sort((left, right) => left.month.localeCompare(right.month));
+          const currentMonth = localDateKey().slice(0, 7);
+          let position = menus.findIndex((menu) => menu.month === currentMonth);
+          if (position < 0) {
+            position = menus.findIndex((menu) => menu.month > currentMonth);
+            if (position < 0) position = menus.length - 1;
+          }
+          const schedule = parseDaySchedule(daySchedule);
+          const showMonth = (nextPosition) => {
+            position = nextPosition;
+            render(menus[position], schedule, position, menus.length);
+          };
+          previousMonth.addEventListener("click", () => showMonth(position - 1));
+          nextMonth.addEventListener("click", () => showMonth(position + 1));
+          showMonth(position);
+        })
         .catch(error => {
           console.error(error);
           calendar.innerHTML = '<p class="status">The menu couldn’t be loaded. Please try again shortly.</p>';

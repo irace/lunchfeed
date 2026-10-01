@@ -31,8 +31,8 @@ list, or `OPENROUTER_MODEL` to use one model.
 Lunchfeed refuses any model identifier that could incur inference charges.
 Generated files land in `docs/`:
 
-- `rye-lunch-YYYY-MM.json` and `.ics` for history
-- `rye-lunch-latest.json` and `.ics` for stable consumers
+- `rye-lunch-YYYY-MM.json` and `.ics` for individual months and history
+- `rye-lunch-latest.json` and `.ics` rolling across the available current and next month
 - `osborn-day-schedule.ics` for the six-day cycle shown on the landing page
 
 `SCHOOL_NAME` defaults to `Osborn`. On pizza Fridays, the event title is
@@ -61,15 +61,14 @@ npm run build -- --out-dir /tmp/lunchfeed-output
 4. Run **Build lunch calendar** manually once, or wait for its late-month check.
 
 The workflow refreshes the public Osborn day-cycle ICS daily and shows its
-`Day 1` through `Day 6` labels on the landing-page calendar. From the 1st through
-the 19th it fills in the current month's menu if it is still missing; from the
-20th onward it looks for next month's menu. It calls a free model only after the
-correctly dated asset appears and skips processing once that month's artifact
-exists. Changes are committed and `docs/` is deployed to Pages. A transient
+`Day 1` through `Day 6` labels on the landing-page calendar. It checks both the
+current and next month's menu, calls a free model only after a correctly dated
+asset appears, and skips processing when that month's artifact already exists.
+The stable JSON and ICS files merge whichever of those two monthly artifacts
+are available. Changes are committed and `docs/` is deployed to Pages. A transient
 free-model failure causes the run to fail and the next scheduled check retries
 it; each run tries up to three providers with a ten-minute timeout per provider,
-and there is no paid fallback. A manual run rebuilds the selected month even
-when an artifact already exists.
+and there is no paid fallback.
 
 ## Home Assistant
 

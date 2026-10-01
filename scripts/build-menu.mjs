@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   DEFAULT_SCHOOL,
@@ -7,6 +7,7 @@ import {
   MenuNotPublishedError,
   findElementaryMenuAsset,
   isFreeOpenRouterModel,
+  mergeMenus,
   menuToIcs,
   ocrMenuImages,
   requireImageMimeType,
@@ -14,6 +15,29 @@ import {
   structureMenuWithFallback,
   validateMenu,
 } from "../src/lunchfeed.mjs";
+
+function writeRollingArtifacts(outputDirectory, now = new Date()) {
+  const monthNames = [resolveMonth("current", now), resolveMonth("next", now)];
+  const menus = monthNames
+    .map((month) => join(outputDirectory, `rye-lunch-${month}.json`))
+    .filter((path) => existsSync(path))
+    .map((path) => JSON.parse(readFileSync(path, "utf8")));
+  if (menus.length === 0) {
+    console.log("No current or upcoming monthly artifacts to publish.");
+    return;
+  }
+
+  const rolling = mergeMenus(menus);
+  const generatedAt = rolling.generated_at ? new Date(rolling.generated_at) : now;
+  for (const [name, contents] of [
+    ["rye-lunch-latest.json", `${JSON.stringify(rolling, null, 2)}\n`],
+    ["rye-lunch-latest.ics", menuToIcs(rolling, generatedAt)],
+  ]) {
+    const path = join(outputDirectory, name);
+    writeFileSync(path, contents, "utf8");
+    console.log(`Wrote ${path}`);
+  }
+}
 
 function parseArgs(argv) {
   const options = {
@@ -54,6 +78,7 @@ async function main() {
   const historicalJson = join(options.outputDirectory, `rye-lunch-${month}.json`);
   if (options.ifMissing && existsSync(historicalJson)) {
     console.log(`${historicalJson} already exists; nothing to do.`);
+    writeRollingArtifacts(options.outputDirectory);
     return;
   }
 
@@ -64,6 +89,7 @@ async function main() {
   } catch (error) {
     if (options.allowUnpublished && error instanceof MenuNotPublishedError) {
       console.log(error.message);
+      writeRollingArtifacts(options.outputDirectory);
       return;
     }
     throw error;
@@ -117,20 +143,16 @@ async function main() {
     },
     days: menu.days,
   };
-  const json = `${JSON.stringify(data, null, 2)}\n`;
-  const ics = menuToIcs(data, generatedAt);
-
   mkdirSync(options.outputDirectory, { recursive: true });
   for (const [name, contents] of [
-    [`rye-lunch-${month}.json`, json],
-    [`rye-lunch-${month}.ics`, ics],
-    ["rye-lunch-latest.json", json],
-    ["rye-lunch-latest.ics", ics],
+    [`rye-lunch-${month}.json`, `${JSON.stringify(data, null, 2)}\n`],
+    [`rye-lunch-${month}.ics`, menuToIcs(data, generatedAt)],
   ]) {
     const path = join(options.outputDirectory, name);
     writeFileSync(path, contents, "utf8");
     console.log(`Wrote ${path}`);
   }
+  writeRollingArtifacts(options.outputDirectory);
 }
 
 try {
