@@ -81,8 +81,9 @@ function monthMatches(label, month) {
   const shortYear = year.slice(-2);
   const normalized = label.toLowerCase().replace(/[^a-z0-9]/g, "");
   const hasMonth = normalized.includes(name) || normalized.includes(shortName);
-  const hasYear = normalized.includes(year) || normalized.includes(`menu${shortYear}`);
-  return hasMonth && hasYear;
+  const namedYears = [...normalized.matchAll(/(?:20|menu(?:20)?)(\d{2})/g)]
+    .map((match) => match[1]);
+  return hasMonth && (namedYears.length === 0 || namedYears.every((value) => value === shortYear));
 }
 
 export function findElementaryMenuAsset(html, pageUrl, month) {

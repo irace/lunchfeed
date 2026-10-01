@@ -67,6 +67,22 @@ test("discovers Finalsite's rendered image preview for a document resource", () 
   );
 });
 
+test("discovers a yearless menu asset", () => {
+  const yearlessMenu = finalsiteDocumentPreview.replaceAll(
+    "UpdatedSeptemberElementaryMenu26pptx.pdf",
+    "OctoberElementaryMenuUpdated9-28.pdf",
+  ).replaceAll("UpdatedSeptemberElementaryMenu26pptx (PDF)", "OctoberElementaryMenuUpdated9-28 (PDF)");
+
+  assert.deepEqual(
+    findElementaryMenuAsset(yearlessMenu, "https://school.example/food", "2026-10"),
+    {
+      url: "https://cdn.example/images/f_auto,q_auto/OctoberElementaryMenuUpdated9-28.pdf",
+      kind: "image",
+      label: "OctoberElementaryMenuUpdated9-28 (PDF)",
+    },
+  );
+});
+
 test("accepts rendered image responses and rejects raw documents", () => {
   assert.equal(
     requireImageMimeType(new Response("image", { headers: { "content-type": "image/webp" } })),
@@ -81,6 +97,14 @@ test("accepts rendered image responses and rejects raw documents", () => {
 test("does not substitute the currently published month", () => {
   assert.throws(
     () => findElementaryMenuAsset(page, "https://school.example/food", "2026-10"),
+    MenuNotPublishedError,
+  );
+});
+
+test("does not substitute a menu explicitly labeled with another year", () => {
+  const staleMenu = page.replaceAll("2026", "2025");
+  assert.throws(
+    () => findElementaryMenuAsset(staleMenu, "https://school.example/food", "2026-09"),
     MenuNotPublishedError,
   );
 });
