@@ -270,6 +270,61 @@ Pasta`,
   );
 });
 
+// Actual OCR from November 2026: the Veterans Day graphic and the four-line
+// no-lunch notice previously triggered false missing-meal errors.
+const novemberClosureOcr = `CELL 2026-11-11 (Wednesday)
+11
+=
+FREAD
+-.. 3 a
+
+CELL 2026-11-18 (Wednesday)
+Brunch for Lunch 1g
+Pancake/Waffle
+Hard Boiled Egg
+Baked Tater Tots
+Fresh Banana
+100% Fruit Juice
+Hormone Free Milk
+Sushi Day at Osborn
+
+CELL 2026-11-19 (Thursday)
+Early 19
+Dismissal
+No Lunch
+Served!`;
+
+test("accepts omitted closure graphics and multiline no-lunch notices", () => {
+  const result = validateMenu({
+    month: "2026-11",
+    days: [{ date: "2026-11-18", title: "Pancake/Waffle", sides: [], alt: "", notes: [] }],
+  }, "2026-11", "Osborn", novemberClosureOcr);
+  assert.deepEqual(Object.keys(result.days), ["2026-11-18"]);
+});
+
+test("still rejects a missing real meal alongside November closures", () => {
+  assert.throws(() => validateMenu({
+    month: "2026-11",
+    days: [{ date: "2026-11-17", title: "Cavatappi Pasta", sides: [], alt: "", notes: [] }],
+  }, "2026-11", "Osborn", novemberClosureOcr), /omitted populated lunch dates: 2026-11-18$/);
+});
+
+test("recognizes the shortened Piazza label used on November pizza Fridays", () => {
+  const result = validateMenu({
+    month: "2026-11",
+    days: [
+      { date: "2026-11-13", title: "Pizza Day", sides: [], alt: "", notes: ["Piazza at Milton"] },
+      { date: "2026-11-20", title: "Pizza Day", sides: [], alt: "", notes: ["Piazza at Osborn"] },
+    ],
+  }, "2026-11", "Osborn", `CELL 2026-11-13 (Friday)
+Piazza at Milton
+CELL 2026-11-20 (Friday)
+Piazza at Osborn`);
+  assert.equal(result.days["2026-11-13"].title, "Cafeteria Pizza Day");
+  assert.equal(result.days["2026-11-20"].title, "Piazza Pizza Day");
+  assert.deepEqual(result.days["2026-11-20"].notes, []);
+});
+
 test("classifies pizza Fridays for the selected school and removes the usual choice", () => {
   const result = validateMenu(
     {

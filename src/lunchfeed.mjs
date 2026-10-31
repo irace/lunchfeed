@@ -5,6 +5,11 @@ import { createWorker, PSM } from "tesseract.js";
 export const FOOD_SERVICE_URL =
   "https://www.ryeschools.org/departments/food-service";
 export const DEFAULT_SCHOOL = "Osborn";
+export const DEFAULT_MODELS = [
+  "dots-studio/dots-3-note-preview:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "openrouter/free",
+];
 
 export function isFreeOpenRouterModel(model) {
   return model === "openrouter/free" || model.endsWith(":free");
@@ -376,7 +381,7 @@ Return one entry per school day that has a main lunch. Omit weekends, blank days
 
 Always omit "100% Fruit Juice" and "Hormone Free Milk" even when they appear inside every date cell. Ignore breakfast, prices, payment instructions, USDA text, nutrition slogans, repeating global alternatives, local-farm labels, and kindergarten parent reminders. Treat "Mini Bagel Butter/Cream Cheese" as an alternate rather than a note or side. Use ISO dates in ${month}. Do not invent unclear text.
 
-Pizza Friday rule for ${school}: read the small "Piazza Pizza at [school]" line in each Friday cell. If it says "Piazza Pizza at ${school}", set title to exactly "Piazza Pizza Day". For every other pizza Friday, set title to exactly "Cafeteria Pizza Day". Do not include "Cheese or Pepperoni" in the title, sides, alt, or notes. Do not copy the Piazza school line into notes.
+Pizza Friday rule for ${school}: read the small "Piazza Pizza at [school]" or "Piazza at [school]" line in each Friday cell. If it names ${school}, set title to exactly "Piazza Pizza Day". For every other pizza Friday, set title to exactly "Cafeteria Pizza Day". Do not include "Cheese or Pepperoni" in the title, sides, alt, or notes. Do not copy the Piazza school line into notes.
 
 The OCR is grouped into Monday-Friday columns. Never shift food into an adjacent date when a school-closure cell is blank or graphical. A fuzzy digit must be resolved using this authoritative calendar:
 ${weekdayDateGuide(month)}
@@ -497,7 +502,7 @@ export async function structureMenuWithFallback({
 function piazzaDatesForSchool(sourceText, school) {
   const dates = new Set();
   const schoolPattern = school.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const piazzaPattern = new RegExp(`\\bpiazza?\\s+pizza\\s+at\\s+${schoolPattern}\\b`, "i");
+  const piazzaPattern = new RegExp(`\\bpiazza?\\s+(?:pizza\\s+)?at\\s+${schoolPattern}\\b`, "i");
   let currentDate = null;
   for (const line of String(sourceText).split("\n")) {
     const cell = line.match(/^CELL (\d{4}-\d{2}-\d{2})\b/);
@@ -510,11 +515,14 @@ function piazzaDatesForSchool(sourceText, school) {
 function likelyLunchDates(sourceText) {
   const dates = new Set();
   let currentDate = null;
-  let contentLineCount = 0;
+  let contentLines = [];
   const finishCell = () => {
-    // Closure graphics produce at most a few OCR fragments; populated menu
-    // cells consistently contain an entree plus several accompanying lines.
-    if (currentDate && contentLineCount >= 4) dates.add(currentDate);
+    // No-lunch notices can span as many lines as meals. Closure artwork can
+    // also yield digits and punctuation, which are not evidence of food.
+    const text = contentLines.join(" ");
+    const isClosure = /\b(?:no\s+lunch|no\s+school|school\s+closed)\b/i.test(text);
+    const contentLineCount = contentLines.filter((line) => /[a-z]{3}/i.test(line)).length;
+    if (currentDate && !isClosure && contentLineCount >= 4) dates.add(currentDate);
   };
   for (const rawLine of String(sourceText).split("\n")) {
     const line = rawLine.trim();
@@ -522,9 +530,9 @@ function likelyLunchDates(sourceText) {
     if (cell) {
       finishCell();
       currentDate = cell[1];
-      contentLineCount = 0;
+      contentLines = [];
     } else if (currentDate && line && !line.startsWith("PIZZA FOOTER:")) {
-      contentLineCount += 1;
+      contentLines.push(line);
     }
   }
   finishCell();
@@ -566,7 +574,7 @@ export function validateMenu(data, month, school = DEFAULT_SCHOOL, sourceText = 
       const isPiazzaDay =
         piazzaDates.has(date) ||
         /^piazza pizza day$/i.test(title) ||
-        new RegExp(`\\bpiazza pizza at\\s+${schoolPattern}\\b`, "i").test(pizzaContext);
+        new RegExp(`\\bpiazza\\s+(?:pizza\\s+)?at\\s+${schoolPattern}\\b`, "i").test(pizzaContext);
       title = isPiazzaDay ? "Piazza Pizza Day" : "Cafeteria Pizza Day";
       const isPizzaChoice = (value) =>
         /^(?:cheese\s*(?:or|\/|&)\s*pepperoni|pepperoni\s*(?:or|\/|&)\s*cheese)(?:\s+pizza)?$/i.test(value);
@@ -581,7 +589,7 @@ export function validateMenu(data, month, school = DEFAULT_SCHOOL, sourceText = 
     notes = notes.filter(
       (value) =>
         !isDailyBoilerplate(value) &&
-        !/^piazza? pizza at\b/i.test(value) &&
+        !/^piazza?\s+(?:pizza\s+)?at\b/i.test(value) &&
         !/\blocal (?:jersey|ny) farm\b/i.test(value) &&
         !/\bkindergarten\b|\bbring a parent\b/i.test(value),
     );

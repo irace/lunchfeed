@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   DEFAULT_SCHOOL,
+  DEFAULT_MODELS,
   FOOD_SERVICE_URL,
   MenuNotPublishedError,
   findElementaryMenuAsset,
@@ -107,7 +108,7 @@ async function main() {
 
   if (!process.env.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required");
   const requestedModels = (process.env.OPENROUTER_MODELS || process.env.OPENROUTER_MODEL ||
-    "google/gemma-4-26b-a4b-it:free,dots-studio/dots-3-note-preview:free,qwen/qwen3.8-27b:free")
+    DEFAULT_MODELS.join(","))
     .split(",")
     .map((model) => model.trim())
     .filter(Boolean);
