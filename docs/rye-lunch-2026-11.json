@@ -1,0 +1,178 @@
+{
+  "month": "2026-11",
+  "school": "Osborn",
+  "source": {
+    "page_url": "https://www.ryeschools.org/departments/food-service",
+    "asset_url": "https://resources.finalsite.net/images/f_auto,q_auto/v1793367409/ryeschoolsorg/qg4xopgjbl1iildfys6a/ElementaryNovemberMenufinal10-30.pdf",
+    "asset_type": "image",
+    "asset_mime_type": "image/webp",
+    "extraction": "image-ocr",
+    "requested_model": "dots-studio/dots-3-note-preview:free",
+    "model": "dots-studio/dots-3-note-preview:free",
+    "generated_at": "2026-10-31T02:26:49.493Z"
+  },
+  "days": {
+    "2026-11-02": {
+      "title": "Sweet & Sour Chicken",
+      "sides": [
+        "Steamed Broccoli",
+        "Jasmine Rice",
+        "Fortune Cookie/Oranges"
+      ],
+      "alt": "Plain available",
+      "notes": []
+    },
+    "2026-11-03": {
+      "title": "Double Beef Taco",
+      "sides": [
+        "Fiesta Corn Salad",
+        "Shredded Cheddar",
+        "Salsa/Guac/Sour Cream",
+        "Fresh Pear"
+      ],
+      "alt": "Soft/Hard Shell",
+      "notes": []
+    },
+    "2026-11-04": {
+      "title": "Macaroni & Cheese",
+      "sides": [
+        "Steamed Peas",
+        "Fresh Strawberries"
+      ],
+      "alt": "Plain Pasta Available",
+      "notes": []
+    },
+    "2026-11-05": {
+      "title": "French Toast Sticks",
+      "sides": [
+        "Hash Brown",
+        "Sausage Links",
+        "Fresh Banana"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-06": {
+      "title": "Cafeteria Pizza Day",
+      "sides": [
+        "Caesar Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-09": {
+      "title": "BBQ McRib on Club Roll",
+      "sides": [
+        "Tater Tots",
+        "Sautéed Zucchini",
+        "Melon Slice"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-10": {
+      "title": "Grilled Cheese",
+      "sides": [
+        "Chicken Noodle Soup",
+        "Cherry Tomato Cup",
+        "Apple Sauce Cup"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-12": {
+      "title": "Beef Nachos",
+      "sides": [
+        "Tostitos Scoops Bag",
+        "Shredded Cheese",
+        "Seasoned Black Beans",
+        "Salsa/Sour Cream/Guac"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-13": {
+      "title": "Cafeteria Pizza Day",
+      "sides": [
+        "Garden Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-16": {
+      "title": "Hamburger/Cheeseburger",
+      "sides": [
+        "Whole Grain Roll",
+        "Roasted Root Vegetables",
+        "Chicken Noodle Soup",
+        "Fresh Grapes"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-17": {
+      "title": "Cavatappi Pasta",
+      "sides": [
+        "Marinara/Butter",
+        "Sautéed Spinach",
+        "Garlic Bread",
+        "Sliced Kiwi"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-18": {
+      "title": "Pancake/Waffle",
+      "sides": [
+        "Hard Boiled Egg",
+        "Baked Tater Tots",
+        "Fresh Banana"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-20": {
+      "title": "Piazza Pizza Day",
+      "sides": [
+        "Spinach Salad",
+        "Sliced Packaged Apples"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-23": {
+      "title": "Chicken Patty",
+      "sides": [
+        "Brioche Roll",
+        "Baked French Fries",
+        "Green Leaf Lettuce",
+        "Roma Tomato (LP)",
+        "Apple Sauce Cup"
+      ],
+      "alt": "",
+      "notes": []
+    },
+    "2026-11-24": {
+      "title": "Baked Ziti",
+      "sides": [
+        "Sauteed Green Beans",
+        "Toasted Garlic Bread",
+        "Fresh Fruit Basket"
+      ],
+      "alt": "Plain Pasta Available",
+      "notes": []
+    },
+    "2026-11-30": {
+      "title": "BBQ or Honey Mustard Boneless Wings",
+      "sides": [
+        "Potato Smiles",
+        "Steamed Corn",
+        "Fresh Fruit Basket"
+      ],
+      "alt": "",
+      "notes": []
+    }
+  }
+}
